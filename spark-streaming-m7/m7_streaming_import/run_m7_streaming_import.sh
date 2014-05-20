@@ -13,11 +13,14 @@ PORT=9999
 BATCHSECS=3 
 TABLENAME=/tables/sensortable 
 OUTFILE=/mapr/${CLUSTER}/CSV/sensor.csv
+JARFILE=/mapr/${CLUSTER}/demos/spark-streaming-m7/target/scala-2.10/spark-streaming-m7_2.10-0.1-SNAPSHOT.jar
+
+
 
 
 ####first, check if things are mounted properly..and bomb out if not
 
-if[ ! -d /mapr/${CLUSTER} ]
+if [ ! -d /mapr/${CLUSTER} ]
 	then
 	echo "/mapr/${CLUSTER} not mounted, quitting"
 	exit 1
@@ -44,7 +47,7 @@ fi
 
 ###delete table if it exists
 
-if[ -e /mapr/${CLUSTER}/${TABLENAME} ]
+if [ -e /mapr/${CLUSTER}/${TABLENAME} ]
 	then
 		echo "deleting existing table /mapr/${CLUSTER}/${TABLENAME}"
 		rm -f  /mapr/${CLUSTER}/${TABLENAME}
@@ -60,7 +63,7 @@ echo "created ${TABLENAME} and CF:cf1"
 
 
 ###blow away CSV file
-if[ -e ${OUTFILE} ]
+if [ -e ${OUTFILE} ]
 	then
 	rm -f ${OUTFILE}
 fi
@@ -79,7 +82,7 @@ export CLASSPATH
 
 ###Jars for our app###
 #first, use the JAR we care about
-CLASSPATH+=target/scala-2.10/m7import_2.10-0.1-SNAPSHOT.jar
+CLASSPATH+=${JARFILE}
 
 #next, grab jars from mapR spark + shark folders
 
