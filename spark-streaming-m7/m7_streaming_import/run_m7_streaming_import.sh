@@ -1,23 +1,85 @@
 #!/usr/bin/bash
 
+##TODO
+# * simplify variable setting..eg: source from spark-env.sh, etc. perhaps create a env.sh for this demo
+# * instead of blowing away/re-creating the table each run,  perhaps just create a bunch of tables..one for each iteration?
+# * elegantly check if spark workers are running.
+
+##set variables!
+CLUSTER=summit2014
+SPARK_URL=spark://ip-10-170-142-235.us-west-1.compute.internal:7077
+MYHOST=ip-10-170-142-235
+PORT=9999 
+BATCHSECS=3 
+TABLENAME=/tables/sensortable 
+OUTFILE=/mapr/${CLUSTER}/CSV/sensor.csv
+
+
+####first, check if things are mounted properly..and bomb out if not
+
+if[ ! -d /mapr/${CLUSTER} ]
+	then
+	echo "/mapr/${CLUSTER} not mounted, quitting"
+	exit 1
+fi
+
+####check if our socket is open
+
+if ! lsof -i:${PORT}
+	then
+	echo "port ${PORT} isn't listening..perhaps you need to start the launch_datastream.sh script"
+	exit 1
+fi
+
+#### check if spark is running on 7077
+
+if ! lsof -i:7077
+	then
+	echo "spark isn't listening on port 7077, you may need to start it from MCS"
+	exit 1
+fi
+
+####TODO: check if spark workers are running on at least one node..
+
+
+###delete table if it exists
+
+if[ -e /mapr/${CLUSTER}/${TABLENAME} ]
+	then
+		echo "deleting existing table /mapr/${CLUSTER}/${TABLENAME}"
+		rm -f  /mapr/${CLUSTER}/${TABLENAME}
+fi
+
+###Create a new table and CF
+
+mkdir -p /mapr/${CLUSTER}/${TABLENAME}
+
+maprcli table create -path ${TABLENAME}
+maprcli table cf create -path ${TABLENAME} -cfname cf1
+echo "created ${TABLENAME} and CF:cf1"
+
+
+###blow away CSV file
+if[ -e ${OUTFILE} ]
+	then
+	rm -f ${OUTFILE}
+fi
+
+##create directory if need be
+
+mkdir -p /mapr/${CLUSTER}/CSV
+
 
 
 export SHARK_HOME=/opt/mapr/shark/shark-0.9.0
 export SPARK_HOME=/opt/mapr/spark/spark-0.9.1
 export SCALA_HOME=/usr/share/java
-
-
 export CLASSPATH
 
 
+###Jars for our app###
 #first, use the JAR we care about
 CLASSPATH+=target/scala-2.10/m7import_2.10-0.1-SNAPSHOT.jar
-
-
-
-
-
-
 
 #next, grab jars from mapR spark + shark folders
 
@@ -53,4 +115,4 @@ CLASSPATH+=:/opt/mapr/lib/maprfs-1.0.3-mapr-3.0.3.jar
 
 #finally, execute the code
 
-/bin/java -cp $CLASSPATH org.apache.spark.streaming.m7import.m7import spark://shark-1:7077 shark-1 9999 3 /tables/mytable /mapr/shark/CSV/newfile.csv
+/bin/java -cp $CLASSPATH org.apache.spark.streaming.m7import.m7import ${SPARK_URL} ${MYHOST} ${PORT} ${BATCHSECS} ${TABLENAME} ${OUTFILE}
