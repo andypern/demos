@@ -13,7 +13,7 @@ PORT=9999
 BATCHSECS=3 
 TABLENAME=/tables/sensortable 
 OUTFILE=/mapr/${CLUSTER}/CSV/sensor.csv
-JARFILE=/mapr/${CLUSTER}/demos/spark-streaming-m7/target/scala-2.10/spark-streaming-m7_2.10-0.1-SNAPSHOT.jar
+JARFILE=/mapr/${CLUSTER}/demos/spark-streaming-m7/m7_streaming_import/target/scala-2.10/m7import_2.10-0.1-SNAPSHOT.jar
 
 
 
