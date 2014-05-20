@@ -55,7 +55,7 @@ fi
 
 ###Create a new table and CF
 
-mkdir -p /mapr/${CLUSTER}/${TABLENAME}
+mkdir -p /mapr/${CLUSTER}/tables
 
 maprcli table create -path ${TABLENAME}
 maprcli table cf create -path ${TABLENAME} -cfname cf1
