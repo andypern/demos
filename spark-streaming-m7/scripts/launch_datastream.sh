@@ -13,7 +13,7 @@ SLEEPSECS=.25
 ##
 
 
-if[ -d /mapr/${CLUSTER} ]
+if [ -d /mapr/${CLUSTER} ]
 	then
 		if [ -f ${BASEDIR}/nc.pid ]
 		then

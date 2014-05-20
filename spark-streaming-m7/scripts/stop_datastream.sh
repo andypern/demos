@@ -7,7 +7,7 @@ BASEDIR=/mapr/${CLUSTER}/ingest
 
 
 #first , kill the listener off
-if[-d /mapr/${CLUSTER}]
+if [ -d /mapr/${CLUSTER} ]
 	then
 		if [ -f ${BASEDIR}/nc.pid ]
 		then
