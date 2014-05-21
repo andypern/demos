@@ -23,47 +23,104 @@ The goal of this demo is to show users how to use MapR, in conjunction with spar
 * shark + spark installed as per https://docs.google.com/a/maprtech.com/document/d/1WbyM-0RCWhCRdVrkGO5MKevWXz5U2hwWjalQGRhDHr4
 
 
-and dump this into hive-site.xml:
+####Shark specifics
+
+The docs for installing shark+spark are mostly complete, but if you want to use shark with M7 you'll need to do a little extra.
+
+1.  First, dump this into hive-site.xml:
 
 
-<!--this is to get shark to work w/ m7-->
-<property>
-<name>hive.aux.jars.path</name>
-   <value>file:///opt/mapr/hive/hive-0.12/lib/hive-hbase-handler-0.12-mapr-1403.jar,file:///opt/mapr/hbase/hbase-0.94.13/hbase-0.94.13-mapr-1403.jar,file:///opt/mapr/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.jar</value>
-   <description>A comma separated list (with no spaces) of the jar files required for Hive-HBase integration</description>
- </property>
-
-<property>
-  <name>hbase.zookeeper.quorum</name>
-  <value>node-1,node-2,node-3</value>
-<description>A comma separated list (with no spaces) of the IP addresses of all ZooKeeper servers in the cluster.</description>
- </property>
- <property>
-  <name>hbase.zookeeper.property.clientPort</name>
-  <value>5181</value>
-  <description>The Zookeeper client port. The MapR default clientPort is 5181.</description>
-  </property>
+		<!--this is to get shark to work w/ m7-->
+		<property>
+		<name>hive.aux.jars.path</name>
+		   <value>file:///opt/mapr/hive/hive-0.12/lib/hive-hbase-handler-0.12-mapr-1403.jar,file:///opt/mapr/hbase/hbase-0.94.13/hbase-0.94.13-mapr-1403.jar,file:///opt/mapr/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.jar</value>
+		   <description>A comma separated list (with no spaces) of the jar files required for Hive-HBase integration</description>
+		 </property>
+		
+		<property>
+		  <name>hbase.zookeeper.quorum</name>
+		  <value>node-1,node-2,node-3</value>
+		  <description>A comma separated list (with no spaces) of the IP addresses of all ZooKeeper servers in the cluster.</description>
+		</property>
+		
+		 <property>
+		  <name>hbase.zookeeper.property.clientPort</name>
+		  <value>5181</value>
+		  <description>The Zookeeper client port. The MapR default clientPort is 5181.</description>
+		 </property>
   
- then:
- clush -a -c /opt/mapr/hive/hive-0.12/conf/hive-site.xml
  
-  and shove this into /opt/mapr/shark/shark-0.90/run (on line 63):
-  
-  SPARK_CLASSPATH+=:/opt/mapr/hive/hive-0.12/lib/hive-exec-0.12-mapr-1403.jar
-  
+ 
+ 2.  Copy that to all nodes for good measure:
+ 
+		 clush -a -c /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+ 
+ 3.  We have to trick the shark 'run' parameters a little, and insert a hive jar into the class path manually. 
 
-* yum install -y git
-* cd /mapr/clustername
-* git clone https://github.com/andypern/demos
-* cd demos/spark-streaming-m7
-* mkdir -p /mapr/clustername/ingest
-* cp data/* /mapr/clustername/ingest
-* cd m7_streaming_import
-* sbt/sbt package  (this might take a few minutes)
-* in a separate SSH session:
-* 	cd /mapr/clustername/demos/spark-streaming-m7/scripts
-* 	sh ./launch_datastream.sh
+		vim /opt/mapr/shark/shark-0.90/run 
+	>edit line 63, but make sure you load this AFTER the lib_managed jars get loaded:
+  
+		  SPARK_CLASSPATH+=:/opt/mapr/hive/hive-0.12/lib/hive-exec-0.12-mapr-1403.jar
+  
+###Demo code prep  
+
+1.  Install git:
+
+		yum install -y git
+
+2.  Go to your NFS loopback mount:
+
+		cd /mapr/clustername
+		
+3.  Grab the entire demos repo (for now..):
+
+		git clone https://github.com/andypern/demos
+
+4.  Go to our specific demo folder:
+
+		cd demos/spark-streaming-m7
+
+5.  Make a folder where our dataset and some other related files will live:
+
+		mkdir -p /mapr/clustername/ingest
+
+6.  Copy the various CSV files we'll be using into place:
+
+		 cp data/* /mapr/clustername/ingest
+
+7. Change directories to where our SCALA code lives:
+
+		 cd m7_streaming_import
+
+8.  Use SBT to package the JAR:
+
+		sbt/sbt package  
+	>(this might take a few minutes)
+
+
+##Running the demo
+
+
+1.  Open a new SSH session to the node you've been working on
+
+2. 	Go into the directory containing the shell scripts for this demo:
+
+		cd /mapr/clustername/demos/spark-streaming-m7/scripts
+
+3.	Modify the launch_datastream.sh script.  You  want to change some of the following variables (esp the CLUSTER), but also the SLEEPSECS
+
+		CLUSTER=summit2014
+		BASEDIR=/mapr/${CLUSTER}/ingest
+		SOURCE_FILE=${BASEDIR}/SensorDataV5.csv
+		PORT=9999
+		SLEEPSECS=.25
+
+
+4.  Modify the sh 
+./launch_datastream.sh
+
 * Then in your other (free) session, run : sh run_m7_streaming_import.sh 
+
 * after awhile..crtl-c on both windows to kill it.
 
 run 'hbase shell' and scan to make sure stuff shows up:

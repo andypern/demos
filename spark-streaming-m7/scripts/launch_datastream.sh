@@ -3,11 +3,8 @@
 
 ##Set some variables
 CLUSTER=summit2014
-
-
 BASEDIR=/mapr/${CLUSTER}/ingest
 SOURCE_FILE=${BASEDIR}/SensorDataV5.csv
-
 PORT=9999
 SLEEPSECS=.25
 ##
