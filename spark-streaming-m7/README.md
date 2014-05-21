@@ -3,6 +3,9 @@ This is a work in progress...
 
 ##TODO
 
+* add some screenshots to this doc
+* simplify the procedure (put more logic into the shell scripts)
+* Add visualization for realtime (e.g.: dispatch to D3/etc prior to insertion into M7)
 
 ##Overview
 
@@ -10,7 +13,6 @@ The goal of this demo is to show users how to use MapR, in conjunction with spar
 
 * ingest data using network transport (socket)
 *  spark-streaming to load data into m7-table
-*  
 * Use shark to query data , both from M7, as well as from flat files (csv)
 * Leverage ODBC drivers to allow Tableau to access data in M7
 
@@ -18,16 +20,27 @@ The goal of this demo is to show users how to use MapR, in conjunction with spar
 
 ## Pre-requisites
 
+###Client/windows host
+
+* Windows7 or 2008_server_R2 or above
+* NFS client configured 
+* Tableau 8.1 installed
+* MapR ODBC drivers installed (***need link***)
+
+
 ###cluster
 * MapR 3.0.3 , with m7 license
+* localhost/loopback mounts are working.
 * shark + spark installed as per https://docs.google.com/a/maprtech.com/document/d/1WbyM-0RCWhCRdVrkGO5MKevWXz5U2hwWjalQGRhDHr4
+* Make sure you can get to the spark UI (on port 8080), and that you can fire off slaves/workers successfully.
+* Also take note of the spark URL (spark://hostname:7077) EXACTLY, as you'll need it later.
 
 
 ####Shark specifics
 
 The docs for installing shark+spark are mostly complete, but if you want to use shark with M7 you'll need to do a little extra.
 
-1.  First, dump this into hive-site.xml:
+1.  First, dump this into hive-site.xml (***make sure to modify hbase+hive paths to reflect proper version #'s, also make sure to put the proper zk quorum nodes in..***):
 
 
 		<!--this is to get shark to work w/ m7-->
@@ -98,7 +111,7 @@ The docs for installing shark+spark are mostly complete, but if you want to use 
 	>(this might take a few minutes)
 
 
-##Running the demo
+###Edit variables
 
 
 1.  Open a new SSH session to the node you've been working on
@@ -107,7 +120,7 @@ The docs for installing shark+spark are mostly complete, but if you want to use 
 
 		cd /mapr/clustername/demos/spark-streaming-m7/scripts
 
-3.	Modify the launch_datastream.sh script.  You  want to change some of the following variables (esp the CLUSTER), but also the SLEEPSECS
+3.	Modify the launch_datastream.sh script.  You will want to change some of the following variables (esp the CLUSTER).  The SLEEPSECS variable tells the script how long to wait between sending lines to the network socket.  .25 seconds means that 4 lines/second will be sent.
 
 		CLUSTER=summit2014
 		BASEDIR=/mapr/${CLUSTER}/ingest
@@ -116,26 +129,65 @@ The docs for installing shark+spark are mostly complete, but if you want to use 
 		SLEEPSECS=.25
 
 
-4.  Modify the sh 
-./launch_datastream.sh
+4.  Modify the run_m7_streaming_import.sh script.  Make sure to change the CLUSTER, SPARK_URL (must match exactly what you see in the spark UI), MYHOST (should be the node you are working on).  You don't need to change the TABLENAME or OUTFILE/JARFILE, the script will create paths automatically.
 
-* Then in your other (free) session, run : sh run_m7_streaming_import.sh 
+		CLUSTER=summit2014
+		SPARK_URL=spark://ip-10-170-142-235.us-west-1.compute.internal:7077
+		MYHOST=ip-10-170-142-235
+		PORT=9999 
+		BATCHSECS=3 
+		TABLENAME=/tables/sensortable 
+		OUTFILE=/mapr/${CLUSTER}/CSV/sensor.csv
+		JARFILE=/mapr/${CLUSTER}/demos/spark-streaming-m7/m7_streaming_import/target/scala-2.10/m7import_2.10-0.1-SNAPSHOT.jar
 
-* after awhile..crtl-c on both windows to kill it.
 
-run 'hbase shell' and scan to make sure stuff shows up:
 
-scan '/tables/sensortable'
 
-now create hive external table:
 
-hive -f scripts/create_ext_table.hql
+##Running things..
 
-do a 'hive -e "select * from sensor limit 10;"' to make sure it works
+###Populating tables
 
-now try shark:
+1.  Make sure you have 3 terminal windows ssh'd into the cluster, where you've cd'd into the following directory:
 
-/opt/mapr/shark/shark-0.9.0/bin/shark
+		/mapr/clustername/demos/spark-streaming-m7/scripts
+
+2.  In 'terminal-1', launch the data stream generator:
+
+		sh ./launch_datastream.sh
+>the output to the screen will be CSV data as it is streamed to the network socket.
+
+3.  In 'terminal-2', launch the spark-streaming script (which will pull data into M7): 
+
+		sh ./run_m7_streaming_import.sh 
+>the output will indicate how many rows were inserted into M7 and persisted on disk.  The interval is controlled by the BATCHSECS variable.  
+
+
+4.  Wait for 60 seconds so that some data can populate.  In 'terminal-3' we're going to look at the table and make sure that data is appearing:
+
+
+		hbase shell
+
+
+		>scan '/tables/sensortable', {LIMIT => 5}
+> hit 'crtl-d' to exit this prompt
+
+###External access to tables
+		
+In order for other applications (shark, and subsequently, tableau) to get access to the data inside of M7, we'll need to create some external tables.
+
+All work here is done in 'terminal-3'
+
+1.  First, create a table which points to our M7 data:
+
+		hive -f create_ext_table.hql
+>this should return quickly
+
+2.  Verify that you can run shark against this table and see data:
+
+		/opt/mapr/shark/shark-0.9.0/bin/shark -e "select * from sensor limit 10;"
+
+
 
 
 
@@ -143,12 +195,7 @@ now try shark:
 
 
 
-###Client/windows host
 
-* Windows7 or 2008_server_R2 or above
-* NFS client configured 
-* Tableau 8.1 installed
-* MapR ODBC drivers installed (***need link***)
 
 
 
