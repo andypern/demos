@@ -1,14 +1,8 @@
 #Shark, Spark, M7
-
+This is a work in progress...
 
 ##TODO
 
-some nice to haves:
-
-* snapshot integration
-* mirror integration
-* leverage spark to perform ingest and/or transformation
-* 
 
 ##Overview
 
@@ -88,7 +82,7 @@ now try shark:
 
 
 
-
+##Everything below doesn't work
 
 
 
@@ -148,22 +142,10 @@ from CLI:
 Need to develop some story here..perhaps we want to create aggregations in spark that are output or inserted into M7?  as opposed to using importtsv?
 Some ideas:
 
-* thrift API for python to get access to M7 tables
-* do i need to use tachyon?
-
-***I AM HERE***
 
 
 
-###load data into table (importtsv)
 
-(***3 mins***)
-
-1.  Switch to a CLI.  Explain that we will be loading the data into our newly created table using a simple script.  Run script: 
-
-		sh /mapr/mycluster/scripts/import_sensor.sh vol1 sensor
-
-2.  Show via MCS UI the 'regions' tab for this table to show size, # of rows, etc. 
 
 3.  Run a quick 'scan' from CLI to show one row: 
 
