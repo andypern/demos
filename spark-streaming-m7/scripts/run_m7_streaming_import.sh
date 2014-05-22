@@ -5,15 +5,19 @@
 # * instead of blowing away/re-creating the table each run,  perhaps just create a bunch of tables..one for each iteration?
 # * elegantly check if spark workers are running.
 
-##set variables!
-CLUSTER=summit2014
-SPARK_URL=spark://ip-10-170-142-235.us-west-1.compute.internal:7077
-MYHOST=ip-10-170-142-235
-PORT=9999 
-BATCHSECS=3 
-TABLENAME=/tables/sensortable 
-OUTFILE=/mapr/${CLUSTER}/CSV/sensor.csv
-JARFILE=/mapr/${CLUSTER}/demos/spark-streaming-m7/m7_streaming_import/target/scala-2.10/m7import_2.10-0.1-SNAPSHOT.jar
+##the env.sh sets our variables, but if that isn't working you can uncomment and manually set them below.
+
+. ./env.sh
+
+
+# CLUSTER=summit2014
+# SPARK_URL=spark://ip-10-170-142-235.us-west-1.compute.internal:7077
+# MYHOST=ip-10-170-142-235
+# PORT=9999 
+# BATCHSECS=3 
+# TABLENAME=/tables/sensortable 
+# OUTFILE=/mapr/${CLUSTER}/CSV/sensor.csv
+# JARFILE=/mapr/${CLUSTER}/demos/spark-streaming-m7/m7_streaming_import/target/scala-2.10/m7import_2.10-0.1-SNAPSHOT.jar
 
 
 
