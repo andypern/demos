@@ -32,6 +32,7 @@ The goal of this demo is to show users how to use MapR, in conjunction with spar
 
 
 ###cluster
+
 * MapR 3.0.3 , with m7 license
 * localhost/loopback mounts are working.
 
