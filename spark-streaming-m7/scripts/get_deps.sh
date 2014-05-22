@@ -1,4 +1,7 @@
 #!/bin/bash
+
+DEMODIR=/mapr/demo.mapr.com/demos/spark-streaming-m7
+
 echo 0 > /selinux/enforce
 ssh-keygen -f /root/.ssh/id_rsa -t rsa -P ""
 cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
@@ -19,16 +22,16 @@ yum install -y mapr-spark-master
  maprcli node services -name hs2 -action stop -nodes maprdemo
 
 
-cp -f /mapr/demo.mapr.com/demos/spark-streaming-m7/conf/hive-site.xml /opt/mapr/hive/hive-0.12/conf/hive-site.xml
-cp -f /mapr/demo.mapr.com/demos/spark-streaming-m7/conf/shark-env.sh /opt/mapr/shark/shark-0.9.0/conf/shark-env.sh
-cp -f /mapr/demo.mapr.com/demos/spark-streaming-m7/conf/run /opt/mapr/shark/shark-0.9.0/run
+cp -f ${DEMODIR}/conf/hive-site.xml /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+cp -f ${DEMODIR}/conf/shark-env.sh /opt/mapr/shark/shark-0.9.0/conf/shark-env.sh
+cp -f ${DEMODIR}/conf/run /opt/mapr/shark/shark-0.9.0/run
 
 
 mkdir -p /mapr/demo.mapr.com/ingest
 
-cp ../data/* /mapr/demo.mapr.com/ingest
+cp ${DEMODIR}/data/* /mapr/demo.mapr.com/ingest
 
-cd ../m7_streaming_import
+cd ${DEMODIR}/m7_streaming_import
 
 sbt/sbt package  
 
