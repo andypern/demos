@@ -78,6 +78,10 @@ If you are using a 3.0.3 Sandbox, you can follow these shorter directions.  If n
 * install lsof
 * shark + spark installed as per https://docs.google.com/a/maprtech.com/document/d/1WbyM-0RCWhCRdVrkGO5MKevWXz5U2hwWjalQGRhDHr4
 * ssh keys setup so node-1 can ssh w/out password to other nodes.
+* make a symlink (needed for some scala/spark/shark things):
+
+		 ln -s /usr/bin/java /bin/java
+		 
 
 
 ####Shark specifics
@@ -215,7 +219,7 @@ The docs for installing shark+spark are mostly complete, but if you want to use 
 
 1.  Make sure you have 3 terminal windows ssh'd into the cluster, where you've cd'd into the following directory:
 
-		/mapr/demo.mapr.com/demos/spark-streaming-m7/scripts
+			
 
 2.  In 'terminal-1', launch the data stream generator:
 
