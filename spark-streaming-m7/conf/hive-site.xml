@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<configuration>
+<property>
+ <name>hive.metastore.uris</name>
+ <value>thrift://localhost:9083</value>
+</property>
+<property>
+ <name>hive.metastore.execute.setugi</name>
+ <value>true</value>
+</property>
+<property>
+ <name>hive.server2.enable.doAs</name>
+ <value>true</value>
+</property>
+<property>
+ <name>oozie.service.WorkflowAppService.system.libpath</name>
+ <value>/oozie/share/lib</value>
+</property>
+<!--this is to get shark to work w/ m7-->
+<property>
+<name>hive.aux.jars.path</name>
+   <value>file:///opt/mapr/hive/hive-0.12/lib/hive-hbase-handler-0.12-mapr-1403.jar,file:///opt/mapr/hbase/hbase-0.94.17/hbase-0.94.17-mapr-1403-SNAPSHOT.jar,file:///opt/mapr/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.jar</value>
+   <description>A comma separated list (with no spaces) of the jar files required for Hive-HBase integration</description>
+ </property>
+
+<property>
+  <name>hbase.zookeeper.quorum</name>
+  <value>maprdemo</value>
+  <description>A comma separated list (with no spaces) of the IP addresses of all ZooKeeper servers in the cluster.</description>
+</property>
+
+ <property>
+  <name>hbase.zookeeper.property.clientPort</name>
+  <value>5181</value>
+  <description>The Zookeeper client port. The MapR default clientPort is 5181.</description>
+ </property>
+</configuration>
