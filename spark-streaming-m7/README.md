@@ -5,7 +5,9 @@ This is a work in progress...
 
 * add some screenshots to this doc
 * simplify the procedure (put more logic into the shell scripts)
+* wrap sharkserver2 startup
 * Add visualization for realtime (e.g.: dispatch to D3/etc prior to insertion into M7)
+* use Kafka instead of netcat..
 
 ##Overview
 
@@ -25,7 +27,8 @@ The goal of this demo is to show users how to use MapR, in conjunction with spar
 * Windows7 or 2008_server_R2 or above
 * NFS client configured 
 * Tableau 8.1 installed
-* MapR ODBC drivers installed (***need link***)
+* Shark ODBC driver installed: https://drive.google.com/a/maprtech.com/file/d/0B2LQncH-ZgnwcVRnZDV3Wjdsd2c/edit?usp=sharing
+
 
 
 ###cluster
@@ -39,7 +42,7 @@ The goal of this demo is to show users how to use MapR, in conjunction with spar
 
 * mapr-hbase should be installed on all nodes (so that the HBASE client jars are in place)
 * mapr-hivemetastore should be installed on the node you will be working on (referred to as node-1 here)
-* mapr-hiveserver should be installed on node-1
+* make sure that hs2 (hiveserver2) is NOT running on node-1.
 * mapr-hive should be installed on all nodes (just in case) in order to get client jars
 * mysql backend for hivemetastore is optional, but recommended.
 
@@ -200,6 +203,16 @@ All work here is done in 'terminal-3'
 
 		/opt/mapr/shark/shark-0.9.0/bin/shark -e "select * from sensor limit 10;"
 
+3.  Kick off sharkserver2 so we can get access via ODBC/etc:
+
+		/opt/mapr/shark/shark-0.90/bin/shark --service sharkserver2 &
+		disown
+
+4.  Verify that you can connect to it via JDBC:
+
+		/opt/mapr/shark/shark-0.90/bin/shark --service beeline
+		>!connect jdbc:hive2://localhost:10000 root mapr org.apache.hive.jdbc.HiveDriver
+		> show tables;
 
 
 
@@ -212,91 +225,6 @@ All work here is done in 'terminal-3'
 
 
 
-##Demo procedure
-
-###Introduce MCS
-
-1. Show tables section of MCS (***2 mins***)
-	* show tables: 2 will exist.  One will be large enough to be auto split into regions.
-	* talk about column families, and browse column Family options with the UI.
-
-
-2.  Switch to Volumes section of MCS.  Explain/show that tables live within volumes, and that volumes can be setup to be mirrored, snapshotted, etc. (***2 mins***)
-
-3.  Show a pre-existing snapshot schedule on the volume, explain how it provides a layer of protection against user deletions or rogue applications.  (***2 mins***)
-	
-	
-
-3. Use CLI to create a new volume and a table (***1 min***)
-
-from CLI:
-
-	 sh /mapr/mycluster/scripts/create_vol_table.sh vol1 sensor
-	 
-	
-	
-4. go back to MCS UI:  (***1 min***)
-	* show new volume
-	* show table 
-	* explain that the table is empty right now
-
-5.  Show dataset: (***2 mins***)
-
-	* Browse to dataset on local HD.	
-	* Show snip of sample dataset via text editor.  Briefly explain the columns which will be used.
-	
-	
-
-###ingest data over NFS
-
-(***3 mins***)
-
-
-* copy both CSV files from the desktop using windows explorer browser, put it into the input directory (/mapr/mycluster/input).  Explain how the NFS read-write filesystem is Unique to MapR, and makes ingestion of data from various sources much easier. 
-
-###process/sanitize data w/ spark?
-
-Need to develop some story here..perhaps we want to create aggregations in spark that are output or inserted into M7?  as opposed to using importtsv?
-Some ideas:
-
-
-
-
-
-
-3.  Run a quick 'scan' from CLI to show one row: 
-
-		hbase shell
-		scan '/mapr/mycluster/tables/vol1/sensor', {LIMIT => 1}
-	
-
-
-###Create  HIVE tables
-
-(***5 mins***)
-
-1.  Switch to CLI, show the create_ext_table.hql hive-script.  Explain that this table merely points to our newly created table, in order to enable SQL access into the data.
-	
-
-
-2.  run the hive script to create the table:
-	
-		hive -f /mapr/mycluster/scripts/create_ext_table.hql 
-		
-3.  Show new table and one row:
-
-		hive -e "show tables;"
-	
-
-	
-		hive -e "select * from sensor limit 10;"
-
-4.  create the pump_info table, which contains information about the pumps such as vendor, location, etc.
-
-		hive -f /mapr/mycluster/scripts/create_pump_table.hql
-
-
-> if need be, verify w/ shark that these tables show up and are query-able.
 
 
 
