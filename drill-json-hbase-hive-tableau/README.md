@@ -36,6 +36,117 @@
 * mapr-drill should be installed on all nodes(grab internally from yum.qa.lab/opensource)
 
 
+###Config
+
+Now you'll need to modify some config files:
+
+
+	vim  /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/storage-plugins.json
+
+For this demo, we'll be using HIVE, HBASE, and local files (JSON and parquet). Make your file look similar to:
+	
+	{
+	  "storage":{
+	    dfs: {
+	      type: "file",
+	      connection: "maprfs:///",
+	      workspaces: {
+	        "root" : {
+	          location: "/",
+	          writable: false
+	        },
+	        "tmp" : {
+	          location: "/tmp",
+	          writable: true,
+	          storageformat: "csv"
+	        }
+	      },
+	      formats: {
+	        "psv" : {
+	          type: "text",
+	          extensions: [ "tbl" ],
+	          delimiter: "|"
+	        },
+	        "csv" : {
+	          type: "text",
+	          extensions: [ "csv" ],
+	          delimiter: ","
+	        },
+	        "parquet" : {
+	          type: "parquet"
+	        },
+	        "json" : {
+	          type: "json"
+	        }
+	      }
+	    },
+	    cp: {
+	      type: "file",
+	      connection: "classpath:///"
+	    },
+	    hive : {
+	        type:"hive",
+	        config :
+	          {
+	            "hive.metastore.uris" : "",
+	            "javax.jdo.option.ConnectionURL" : "jdbc:derby:;databaseName=../../sample-data/drill_hive_db;create=true",
+	            "hive.metastore.warehouse.dir" : "/tmp/drill_hive_wh",
+	            "fs.default.name" : "maprfs:///",
+	            "hive.metastore.sasl.enabled" : "false"
+	          }
+	      },
+	    hbase : {
+	      type:"hbase",
+	      config : {
+	        "hbase.zookeeper.quorum" : "node-1,node-2,node-3",
+	        "hbase.zookeeper.property.clientPort" : 5181
+	      }
+	    }
+	  }
+	}
+
+
+    
+    
+copy to all nodes:
+
+	clush -a -c /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/storage-engines.json 
+
+
+Add the HADOOP_HOME variable to the drill-env.sh file:
+
+	echo "export HADOOP_HOME=/opt/mapr/hadoop/hadoop-0.20.2/" >> /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/drill-env.sh
+
+
+copy to all nodes:
+
+	clush -a -c /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/drill-env.sh
+	
+
+Modify the zookeeper config drill-override.xml to make sure that it has the right has the right zookeeper host:port pair for  (default config uses localhost:2181, many ZK installs will listen on port 5181):
+
+	vim /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/drill-override.conf
+	
+	
+		  zk: {
+	    connect: "node-1:5181,node-2:5181,node-3:5181",
+	    root: "/drill",
+	    refresh: 500,
+	    timeout: 5000,
+	    retry: {
+	      count: 7200,
+	      delay: 500
+	    }
+	},
+        
+copy to all nodes:
+  
+
+	clush -a -c /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/drill-override.conf 
+  	
+
+
+
 
 
 

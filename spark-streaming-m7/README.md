@@ -193,6 +193,7 @@ The docs for installing shark+spark are mostly complete, but if you want to use 
 		
 In order for other applications (shark, and subsequently, tableau) to get access to the data inside of M7, we'll need to create some external tables.
 
+***Note: external table creation can happen prior to 
 All work here is done in 'terminal-3'
 
 1.  First, create a table which points to our M7 data:
