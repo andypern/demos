@@ -31,6 +31,19 @@ The goal of this demo is to show users how to use MapR, in conjunction with spar
 ###cluster
 * MapR 3.0.3 , with m7 license
 * localhost/loopback mounts are working.
+
+
+
+
+###packages
+
+* mapr-hbase should be installed on all nodes (so that the HBASE client jars are in place)
+* mapr-hivemetastore should be installed on the node you will be working on (referred to as node-1 here)
+* mapr-hiveserver should be installed on node-1
+* mapr-hive should be installed on all nodes (just in case) in order to get client jars
+* mysql backend for hivemetastore is optional, but recommended.
+
+####Shark/Spark
 * shark + spark installed as per https://docs.google.com/a/maprtech.com/document/d/1WbyM-0RCWhCRdVrkGO5MKevWXz5U2hwWjalQGRhDHr4
 * Make sure you can get to the spark UI (on port 8080), and that you can fire off slaves/workers successfully.
 * Also take note of the spark URL (spark://hostname:7077) EXACTLY, as you'll need it later.
