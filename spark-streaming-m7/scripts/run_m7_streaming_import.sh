@@ -51,7 +51,7 @@ fi
 
 ###delete table if it exists
 
-if [ -e /mapr/${CLUSTER}/${TABLENAME} ]
+if [ -L /mapr/${CLUSTER}/${TABLENAME} ]
 	then
 		echo "deleting existing table /mapr/${CLUSTER}/${TABLENAME}"
 		rm -f  /mapr/${CLUSTER}/${TABLENAME}

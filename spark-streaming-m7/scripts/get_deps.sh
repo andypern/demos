@@ -12,6 +12,7 @@ rpm -ivh /tmp/scala-2.10.3.rpm
 rm -f /tmp/scala-2.10.3.rpm
 
 yum install -y lsof
+yum install -y vim
 
 yum install -y mapr-spark-master
 
