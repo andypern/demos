@@ -1,6 +1,9 @@
 #!/bin/bash
 
-DEMODIR=/mapr/demo.mapr.com/demos/spark-streaming-m7
+
+. ./env.sh
+
+
 
 ln -s /usr/bin/java /bin/java
 
@@ -20,6 +23,9 @@ yum install -y mapr-spark-master
 
 
 /opt/mapr/server/configure.sh -R
+/opt/mapr/spark/spark-0.9.1/sbin/stop-slaves.sh
+sleep 10
+
 /opt/mapr/spark/spark-0.9.1/sbin/start-slaves.sh
 
  maprcli node services -name hs2 -action stop -nodes maprdemo
@@ -31,15 +37,21 @@ cp -f ${DEMODIR}/conf/run /opt/mapr/shark/shark-0.9.0/run
 
 #clean up old cruft
 
-if [ -d /mapr/demo.mapr.com/ingest ]
+if [ -d ${BASEDIR}/ingest ]
 	then
-	rm -rf /mapr/demo.mapr.com/ingest
+	if [ -f ${BASEDIR}/nc.pid ]
+		then
+		OLDPID=`cat ${BASEDIR}/nc.pid`
+		kill -9 ${OLDPID}
+		rm -f ${BASEDIR}/nc.pid
+	fi
+	rm -rf ${BASEDIR}/ingest
 fi
 
 
-mkdir -p /mapr/demo.mapr.com/ingest
+mkdir -p ${BASEDIR}/ingest
 
-cp ${DEMODIR}/data/* /mapr/demo.mapr.com/ingest
+cp ${DEMODIR}/data/* ${BASEDIR}/ingest
 
 cd ${DEMODIR}/m7_streaming_import
 
