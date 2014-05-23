@@ -29,6 +29,13 @@ cp -f ${DEMODIR}/conf/hive-site.xml /opt/mapr/hive/hive-0.12/conf/hive-site.xml
 cp -f ${DEMODIR}/conf/shark-env.sh /opt/mapr/shark/shark-0.9.0/conf/shark-env.sh
 cp -f ${DEMODIR}/conf/run /opt/mapr/shark/shark-0.9.0/run
 
+#clean up old cruft
+
+if [ -d /mapr/demo.mapr.com/ingest ]
+	then
+	rm -rf /mapr/demo.mapr.com/ingest
+fi
+
 
 mkdir -p /mapr/demo.mapr.com/ingest
 
