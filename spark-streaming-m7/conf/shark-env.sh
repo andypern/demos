@@ -46,6 +46,7 @@ export SHARK_MASTER_MEM=1g
 SPARK_JAVA_OPTS=" -Dspark.local.dir=/tmp "
 SPARK_JAVA_OPTS+="-Dspark.kryoserializer.buffer.mb=10 "
 SPARK_JAVA_OPTS+="-verbose:gc -XX:-PrintGCDetails -XX:+PrintGCTimeStamps "
+SPARK_JAVA_OPTS+="-Dspark.cores.max=1"
 export SPARK_JAVA_OPTS
 
 # (Optional) Tachyon Related Configuration

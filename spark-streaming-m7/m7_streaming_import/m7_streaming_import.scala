@@ -89,6 +89,7 @@ object m7import {
 
     //force spark to look for an open port to use for this context
     System.setProperty("spark.ui.port", "5050")
+    System.setProperty("spark.cores.max", "1")
     // Create the context with a X second batch size, where X is the arg you supplied as 'batchsecs'.
 
     val ssc = new StreamingContext(master, "M7import", Seconds(batchsecs),
