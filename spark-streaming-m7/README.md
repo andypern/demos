@@ -36,6 +36,8 @@ The goal of this demo is to show users how to use MapR, in conjunction with spar
 ###v3.0.3 sandbox
 If you are using a 3.0.3 Sandbox, you can follow these shorter directions.  If not, skip to `Nodes that are NOT the 3.0.3 sandbox`
 
+All instructions assume that you login as root (password=mapr on the sandbox)
+
 
 1. Install git:
 
