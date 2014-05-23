@@ -38,23 +38,24 @@ If you are using a 3.0.3 Sandbox, you can follow these shorter directions.  If n
 
 All instructions assume that you login as root (password=mapr on the sandbox)
 
+1.  You must increase the # of cores that your sandbox VM uses to 3 (or 4).  2 is not enough...
 
-1. Install git:
+2. Install git:
 
 		yum install -y git
-2.  Go to your NFS loopback mount:
+3.  Go to your NFS loopback mount:
 
 		cd /mapr/demo.mapr.com
 		
-3.  Grab the entire demos repo (for now..):
+4.  Grab the entire demos repo (for now..):
 
 		git clone https://github.com/andypern/demos
 
-4.	Go to the scripts directory in our specific demo folder:
+5.	Go to the scripts directory in our specific demo folder:
 
 		cd demos/spark-streaming-m7/scripts
 
-5. ***only works on 3.0.3 sandbox***: run dependency installer:
+6. ***only works on 3.0.3 sandbox***: run dependency installer:
 
 		sh ./get_deps.sh
 >this will take several minutes or more.
@@ -68,6 +69,7 @@ All instructions assume that you login as root (password=mapr on the sandbox)
 
 If you really insist on running this on another type of node/cluster, you will need to spend some time getting all the pre-req's taken care of manually.  These steps are not meant to be verbose, and assume you know what you are doing.  Here's what you need:
 
+* If using a single-node cluster, you MUST have at least 3 cpu cores.  If using a multi-node cluster, you'll need to manually launch sharkserver2 on a different node from the spark-streaming app.
 * MapR 3.0.3 , with m7 license.  Other versions will require an EBF patch (available internally only)
 * localhost/loopback mounts are working.
 * mapr-hbase should be installed on all nodes (so that the HBASE client jars are in place)
