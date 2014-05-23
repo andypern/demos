@@ -2,6 +2,11 @@
 
 . ./env.sh
 
+#first, run drop_tables to make sure we don't have any stuff leftover
+
+echo "cleaning up tables that may already exist"
+sh ./drop_tables.sh
+
 #first, create the table pointing to M7, but first blow it away and re-create a dummy one.
 
 if [ -L /mapr/${CLUSTER}/${TABLENAME} ]
@@ -24,6 +29,12 @@ maprcli table cf create -path ${TABLENAME} -cfname cf1
 
 # create a view tying all these tables together.
 #kickoff sharkserver2, but kill it if its running first
+
+if ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}
+	then
+	OLD_SHARK_PID=`ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}`
+	kill -9 ${OLD_SHARK_PID}
+fi
 
 ${SHARK_BIN} --service sharkserver2 &
 SS2_PID=$!

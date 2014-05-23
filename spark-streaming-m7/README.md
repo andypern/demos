@@ -174,7 +174,7 @@ The docs for installing shark+spark are mostly complete, but since you'll be usi
 
 1.  Open a new SSH session to the node you've been working on
 
-2. 	Go into the directory containing the shell scripts for this demo:
+2. 	Make sure you are in the directory containing the shell scripts for this demo:
 
 		cd /mapr/demo.mapr.com/demos/spark-streaming-m7/scripts
 
