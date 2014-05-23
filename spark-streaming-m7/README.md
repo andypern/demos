@@ -5,8 +5,8 @@ This is a work in progress...
 
 * Fork for sandbox instructions (can 3.1 be used...need EBF patch also?)
 * add some screenshots to this doc
-* simplify the procedure (put more logic into the shell scripts)
-* wrap sharkserver2 startup
+* ~~simplify the procedure (put more logic into the shell scripts)~~
+* ~~wrap sharkserver2 startup~~
 * Add visualization for realtime (e.g.: dispatch to D3/etc prior to insertion into M7)
 * use Kafka instead of netcat..
 
@@ -15,7 +15,7 @@ This is a work in progress...
 The goal of this demo is to show users how to use MapR, in conjunction with spark, shark, and MapR-tables (M7) to :
 
 * ingest data using network transport (socket)
-*  spark-streaming to load data into m7-table
+* spark-streaming to load data into m7-table
 * Use shark to query data , both from M7, as well as from flat files (csv)
 * Leverage ODBC drivers to allow Tableau to access data in M7
 
@@ -34,7 +34,7 @@ The goal of this demo is to show users how to use MapR, in conjunction with spar
 
 
 ###v3.0.3 sandbox
-If you are using a 3.0.3 Sandbox, you can follow these shorter directions.  If not, skip to "Nodes that are NOT.."
+If you are using a 3.0.3 Sandbox, you can follow these shorter directions.  If not, skip to `Nodes that are NOT the 3.0.3 sandbox`
 
 
 1. Install git:
@@ -58,22 +58,21 @@ If you are using a 3.0.3 Sandbox, you can follow these shorter directions.  If n
 >this will take several minutes or more.
 
 
-**Now skip down to the "Edit Variables" section.**
+****Now skip down to the "Edit Variables" section.****
 
 
 
 ###Nodes that are NOT the 3.0.3 sandbox
 
+If you really insist on running this on another type of node/cluster, you will need to spend some time getting all the pre-req's taken care of manually.  These steps are not meant to be verbose, and assume you know what you are doing.  Here's what you need:
 
-
-* MapR 3.0.3 , with m7 license.  These instructions were written with the 3.0.3 Sandbox VM in mind (http://package.mapr.com/releases/v3.0.3/sandbox/), but can be adapted to work on any 3.0.3 cluster.
+* MapR 3.0.3 , with m7 license.  Other versions will require an EBF patch (available internally only)
 * localhost/loopback mounts are working.
 * mapr-hbase should be installed on all nodes (so that the HBASE client jars are in place)
 * mapr-hivemetastore should be installed on the node you will be working on (referred to as node-1 here)
 * make sure that hs2 (hiveserver2) is NOT running on node-1. EG: stop the service from MCS if need be.
 * mapr-hive should be installed on all nodes (just in case) in order to get client jars
 * mysql backend for hivemetastore is optional.
-* If you are running any version other than 3.0.3, you will need the appropriate EBF patch from yum.qa.lab
 * install git
 * install lsof
 * shark + spark installed as per https://docs.google.com/a/maprtech.com/document/d/1WbyM-0RCWhCRdVrkGO5MKevWXz5U2hwWjalQGRhDHr4
@@ -86,9 +85,9 @@ If you are using a 3.0.3 Sandbox, you can follow these shorter directions.  If n
 
 ####Shark specifics
 
-The docs for installing shark+spark are mostly complete, but if you want to use shark with M7 you'll need to do a little extra.
+The docs for installing shark+spark are mostly complete, but since you'll be using shark with M7 you'll need to do a little extra.
 
-1.  First, dump this into hive-site.xml (***If you are NOT using the 3.0.3 sandbox, make sure to modify hbase+hive paths to reflect proper version #'s, also make sure to put the proper zk quorum nodes in..***):
+1.  First, dump this into hive-site.xml (***make sure to modify hbase+hive paths to reflect proper version #'s, also make sure to put the proper zk quorum nodes in..***):
 
 
 		<!--this is to get shark to work w/ m7-->
@@ -221,18 +220,26 @@ The docs for installing shark+spark are mostly complete, but if you want to use 
 
 			
 
-2.  In 'terminal-1', launch the data stream generator:
+2.  In `terminal-1`, startup the listener:
 
-		sh ./launch_datastream.sh
->the output to the screen will be CSV data as it is streamed to the network socket.
+		sh ./start_listener.sh
+>this will kick off netcat, and drop you back into the shell
 
-3.  In 'terminal-2', launch the spark-streaming script (which will pull data into M7): 
+
+3.  Again in  `terminal-1`, launch the spark-streaming script, which will get our app running and ready to receive data: 
 
 		sh ./run_m7_streaming_import.sh 
->the output will indicate how many rows were inserted into M7 and persisted on disk.  The interval is controlled by the BATCHSECS variable.  
+>After about 30 seconds the output will stop, and it will be ready to receive data. 
 
 
-4.  Wait for 60 seconds so that some data can populate.  In 'terminal-3' we're going to look at the table and make sure that data is appearing:
+4. Now in `terminal-2`, start pushing data.  Note that you can stop/start this at will, so long as you leave the listener and spark-streaming app running:
+
+		sh ./push_data.sh
+	
+	> output will show you one row every SLEEPSECS.  Notice that every BATCHSECS `terminal-1` will show some output as well..
+
+
+5. Wait about 60 seconds for data to populate our table In `terminal-3` we're going to look at the table and make sure that data is appearing:
 
 
 		hbase shell
@@ -243,27 +250,15 @@ The docs for installing shark+spark are mostly complete, but if you want to use 
 
 ###External access to tables
 		
-In order for other applications (shark, and subsequently, tableau) to get access to the data inside of M7, we'll make use of external tables which are defined in the hive metastore.  All tables and views were pre-created in a previous step, so now we just want to verify that they are working.
+In order for other applications (shark, and subsequently, tableau) to get access to the data inside of M7, we'll make use of external tables which are defined in the hive metastore.  All tables and views were pre-created by `create_tables.sh` previous step, so now we just want to verify that they are working.
 
 
-All work here is done in 'terminal-3'
-
-
-1.  Verify that you can run shark against this table and see data:
+In `terminal-3`, verify that you can run shark against this table and see data:
 
 		/opt/mapr/shark/shark-0.9.0/bin/shark -e "select * from sensor limit 10;"
 
-2.  Kick off sharkserver2 so we can get access via ODBC/etc:
 
-		/opt/mapr/shark/shark-0.90/bin/shark --service sharkserver2 &
-		disown
 
-3.  Verify that you can connect to it via JDBC:
-
-		/opt/mapr/shark/shark-0.90/bin/shark --service beeline
-		!connect jdbc:hive2://localhost:10000 root mapr org.apache.hive.jdbc.HiveDriver
-		 show tables;
->press crtl-d to exit the beeline shell.
 
 Now that you've shown that the data is accessible via SHARK queries, its time to move on to tableau.
 

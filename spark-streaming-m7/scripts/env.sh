@@ -1,7 +1,7 @@
 #env.sh for sparkstreaming => m7 demo
 
 
-#clustername below works for the sandbox, change if you are running on something else
+#clustername below works for the sandbox, you may need to change if you are running on something else
 
 CLUSTER=demo.mapr.com
 MYHOST=`hostname`
@@ -14,5 +14,6 @@ OUTFILE=/mapr/${CLUSTER}/CSV/sensor.csv
 JARFILE=/mapr/${CLUSTER}/demos/spark-streaming-m7/m7_streaming_import/target/scala-2.10/m7import_2.10-0.1-SNAPSHOT.jar
 BASEDIR=/mapr/${CLUSTER}/ingest
 SOURCE_FILE=${BASEDIR}/SensorDataV5.csv
-
+JAVA_BIN=`which java`
 SLEEPSECS=.25 #sleep secs for data generator to pause between sending
+export SHARK_BIN=/opt/mapr/shark/shark-0.9.0/bin/shark

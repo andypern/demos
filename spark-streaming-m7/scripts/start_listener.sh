@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
-
+#this script kill netcat if running, creates a FIFO, then uses that FIFO for the input for netcat.
+# if does NOT push any data across the socket..that's "push_data.sh"
 
 ##the env.sh sets our variables, but if that isn't working you can uncomment and manually set them below.
 
@@ -28,15 +29,9 @@ if [ -d /mapr/${CLUSTER} ]
 		mkfifo ${BASEDIR}/input_pipe
 		tail -f ${BASEDIR}/input_pipe | nc -lk ${PORT} &
 		PID=$!
-		echo ${PID} > ${BASEDIR}/nc.pid
+		echo ${PID} > /nc.pid
 		disown
-		echo "listener started w/ pid ${PID}, commencing datastream..go start your spark-streaming app in terminal-2 NOW"
-		echo "hit crtl-c to kill, then run the stop_datastream.sh script to make sure.."
-		for line in `cat ${SOURCE_FILE}| sort -k2 -k3 -t $',' `
-			do
-			echo ${line} | tee -a ${BASEDIR}/input_pipe 
-			sleep ${SLEEPSECS}
-		done
+		echo "listener started w/ pid ${PID}, you are now ready to run the streaming app"
 
 else
 	echo "/mapr/${CLUSTER} isn't mounted, exiting"

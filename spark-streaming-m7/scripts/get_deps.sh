@@ -2,6 +2,8 @@
 
 DEMODIR=/mapr/demo.mapr.com/demos/spark-streaming-m7
 
+ln -s /usr/bin/java /bin/java
+
 echo 0 > /selinux/enforce
 ssh-keygen -f /root/.ssh/id_rsa -t rsa -P ""
 cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys

@@ -34,7 +34,7 @@ fi
 
 if ! lsof -i:${PORT}
 	then
-	echo "port ${PORT} isn't listening..perhaps you need to start the launch_datastream.sh script"
+	echo "port ${PORT} isn't listening..perhaps you need to start the start_listener.sh script"
 	exit 1
 fi
 
@@ -122,4 +122,4 @@ CLASSPATH+=:/opt/mapr/lib/maprfs-1.0.3-mapr-3.0.3.jar
 
 #finally, execute the code
 
-/bin/java -cp $CLASSPATH org.apache.spark.streaming.m7import.m7import ${SPARK_URL} ${MYHOST} ${PORT} ${BATCHSECS} ${TABLENAME} ${OUTFILE}
+${JAVA_BIN} -cp $CLASSPATH org.apache.spark.streaming.m7import.m7import ${SPARK_URL} ${MYHOST} ${PORT} ${BATCHSECS} ${TABLENAME} ${OUTFILE}
