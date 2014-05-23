@@ -11,10 +11,14 @@ echo 0 > /selinux/enforce
 ssh-keygen -f /root/.ssh/id_rsa -t rsa -P ""
 cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
 
-cd /tmp
-wget http://www.scala-lang.org/files/archive/scala-2.10.3.rpm
-rpm -ivh /tmp/scala-2.10.3.rpm
-rm -f /tmp/scala-2.10.3.rpm
+
+if ! rpm -qa | grep scala
+	then	
+	cd /tmp
+	wget http://www.scala-lang.org/files/archive/scala-2.10.3.rpm
+	rpm -ivh /tmp/scala-2.10.3.rpm
+	rm -f /tmp/scala-2.10.3.rpm
+fi
 
 yum install -y lsof
 yum install -y vim
