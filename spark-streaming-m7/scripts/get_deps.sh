@@ -45,7 +45,7 @@ cp -f ${DEMODIR}/conf/run /opt/mapr/shark/shark-0.9.0/run
 
 #clean up old cruft
 
-if [ -d ${BASEDIR}/ingest ]
+if [ -d ${BASEDIR} ]
 	then
 	if [ -f ${BASEDIR}/nc.pid ]
 		then
@@ -58,13 +58,13 @@ if [ -d ${BASEDIR}/ingest ]
 		SS2_PID=`cat ${BASEDIR}/sharkserver2.pid`
 		kill -9 ${SS2_PID}
 	fi
-	rm -rf ${BASEDIR}/ingest
+	rm -rf ${BASEDIR}
 fi
 
 
-mkdir -p ${BASEDIR}/ingest
+mkdir -p ${BASEDIR}
 
-cp ${DEMODIR}/data/* ${BASEDIR}/ingest
+cp ${DEMODIR}/data/* ${BASEDIR}
 
 cd ${DEMODIR}/m7_streaming_import
 
