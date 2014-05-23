@@ -1,4 +1,4 @@
-CREATE TABLE maint_table
+CREATE EXTERNAL TABLE maint_table
 
 (resourceid STRING, eventDate STRING,
 technician STRING, description STRING)
@@ -6,4 +6,4 @@ technician STRING, description STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ","
 
 
-STORED AS TEXTFILE LOCATION "/ingest/SENSORMAINT.csv";
+STORED AS TEXTFILE LOCATION "/ingest/SENSORMAINT_Table";

@@ -3,7 +3,7 @@ This is a work in progress...
 
 ##TODO
 
-* Fork for sandbox instructions (can 3.1 be used...need EBF patch also?)
+
 * add some screenshots to this doc
 * ~~simplify the procedure (put more logic into the shell scripts)~~
 * ~~wrap sharkserver2 startup~~
@@ -58,7 +58,7 @@ All instructions assume that you login as root (password=mapr on the sandbox)
 6. ***only works on 3.0.3 sandbox***: run dependency installer:
 
 		sh ./get_deps.sh
->this will take several minutes or more.
+>this will take several minutes or more.  It has to download > 600MB worth of dependancies, start/stop some services, and compile some Scala code into a jar file.
 
 
 ****Now skip down to the "Edit Variables" section.****
