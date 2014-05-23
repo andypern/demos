@@ -21,7 +21,7 @@ This should allow the connection to stay open, and be able to shove whatever you
 */
 
 
-//System.setProperty("spark.driver.port", "0")
+
 
 package org.apache.spark.streaming.m7import
 
@@ -88,7 +88,7 @@ object m7import {
     if (outputFile.exists()) outputFile.delete()
 
     //force spark to look for an open port to use for this context
-    System.setProperty("spark.driver.port", "0")
+    System.setProperty("spark.master.port", "5050")
     // Create the context with a X second batch size, where X is the arg you supplied as 'batchsecs'.
 
     val ssc = new StreamingContext(master, "M7import", Seconds(batchsecs),

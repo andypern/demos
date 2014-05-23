@@ -24,6 +24,13 @@ if [ -d /mapr/${CLUSTER} ]
 			rm -f ${BASEDIR}/nc.pid
 		fi
 
+#add another check to kill if need be
+
+if lsof -i:9999
+	then
+	killall -9 nc
+fi
+
 		mkdir -p ${BASEDIR}
 		rm -f ${BASEDIR}/input_pipe
 		mkfifo ${BASEDIR}/input_pipe
