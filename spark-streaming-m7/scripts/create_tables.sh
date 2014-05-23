@@ -41,10 +41,7 @@ SS2_PID=$!
 echo ${SS2_PID} > ${BASEDIR}/sharkserver2.pid
 disown
 
-#verify we can see tables via shark shell
 
-echo "showing tables via shark shell"
-${SHARK_BIN} -e "show tables;"
 
 #verify we can see tables via JDBC+sharkserver2
 

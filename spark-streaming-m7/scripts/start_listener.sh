@@ -36,7 +36,7 @@ fi
 		mkfifo ${BASEDIR}/input_pipe
 		tail -f ${BASEDIR}/input_pipe | nc -lk ${PORT} &
 		PID=$!
-		echo ${PID} > /nc.pid
+		echo ${PID} > ${BASEDIR}/nc.pid
 		disown
 		echo "listener started w/ pid ${PID}, you are now ready to run the streaming app"
 
