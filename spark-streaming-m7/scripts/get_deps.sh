@@ -23,7 +23,10 @@ yum install -y mapr-spark-master
 
 
 /opt/mapr/server/configure.sh -R
+echo "waiting 20 seconds for spark-master to startup"
+sleep 20;
 /opt/mapr/spark/spark-0.9.1/sbin/stop-slaves.sh
+
 sleep 10
 
 /opt/mapr/spark/spark-0.9.1/sbin/start-slaves.sh
@@ -44,6 +47,11 @@ if [ -d ${BASEDIR}/ingest ]
 		OLDPID=`cat ${BASEDIR}/nc.pid`
 		kill -9 ${OLDPID}
 		rm -f ${BASEDIR}/nc.pid
+	fi
+	if [ -f ${BASEDIR}/sharkserver2.pid ]
+		then
+		SS2_PID=`cat ${BASEDIR}/sharkserver2.pid`
+		kill -9 ${SS2_PID}
 	fi
 	rm -rf ${BASEDIR}/ingest
 fi

@@ -23,11 +23,11 @@ maprcli table cf create -path ${TABLENAME} -cfname cf1
 /usr/bin/hive -f create_maint_table.hql
 
 # create a view tying all these tables together.
-#kickoff sharkserver2
+#kickoff sharkserver2, but kill it if its running first
 
 ${SHARK_BIN} --service sharkserver2 &
-SHARK_PID=$!
-echo ${SHARK_PID} > ${BASEDIR}/sharkserver2.pid
+SS2_PID=$!
+echo ${SS2_PID} > ${BASEDIR}/sharkserver2.pid
 disown
 
 #verify we can see tables via shark shell
@@ -39,7 +39,7 @@ ${SHARK_BIN} -e "show tables;"
 
 echo "showing tables via beeline/jdbc + sharkserver2"
 
-{$SHARK_BIN} --service beeline -u jdbc:hive2://${MYHOST}:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver -e "show tables;"
+${SHARK_BIN} --service beeline -u jdbc:hive2://${MYHOST}:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver -e "show tables;"
 
 echo "if you saw 3 or more tables..all is well."
 
