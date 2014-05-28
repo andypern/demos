@@ -88,7 +88,7 @@ For this demo, we'll be using HIVE, HBASE, and local files (JSON and parquet). M
 	        type:"hive",
 	        config :
 	          {
-	            "hive.metastore.uris" : "",
+	            "hive.metastore.uris" : "thrift://node-1:9083",
 	            "javax.jdo.option.ConnectionURL" : "jdbc:derby:;databaseName=../../sample-data/drill_hive_db;create=true",
 	            "hive.metastore.warehouse.dir" : "/tmp/drill_hive_wh",
 	            "fs.default.name" : "maprfs:///",
