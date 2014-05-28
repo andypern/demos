@@ -15,6 +15,7 @@ if [ -L /mapr/${CLUSTER}/${TABLENAME} ]
 		rm -f  /mapr/${CLUSTER}/${TABLENAME}
 fi
 
+mkdir -p /mapr/${CLUSTER}/tables
 maprcli table create -path ${TABLENAME}
 maprcli table cf create -path ${TABLENAME} -cfname cf1
 
