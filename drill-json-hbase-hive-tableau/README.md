@@ -38,6 +38,8 @@
 
 ###Config
 
+***need to modify memory limits for drill***
+
 Now you'll need to modify some config files:
 
 
@@ -89,12 +91,16 @@ For this demo, we'll be using HIVE, HBASE, and local files (JSON and parquet). M
 	        config :
 	          {
 	            "hive.metastore.uris" : "thrift://node-1:9083",
-	            "javax.jdo.option.ConnectionURL" : "jdbc:derby:;databaseName=../../sample-data/drill_hive_db;create=true",
-	            "hive.metastore.warehouse.dir" : "/tmp/drill_hive_wh",
-	            "fs.default.name" : "maprfs:///",
 	            "hive.metastore.sasl.enabled" : "false"
 	          }
 	      },
+	      M7 : {
+      type:"hbase",
+      config : {
+         "hbase.zookeeper.quorum": "10.10.100.56",
+         "hbase.zookeeper.property.clientPort": 5181,
+         "hbase.table.namespace.mappings": "*:/test/tables"
+      },
 	    hbase : {
 	      type:"hbase",
 	      config : {
@@ -198,8 +204,37 @@ also:
 
 
 	
+##Running the demo
+
+###Introduction
+
+- Show a slide with a diagram showing the components
+- show a slide detailing the clickstream use case
+- talk about how the data comes in different formats, and we don't want to have to do any sort of manipulation to be able to query against it.
+
+###Dataset intro
+- show snippets of JSON data and CSV data (not on a CLI..do it in a deck/pdf)
+
+- explain how drill can access all this (and more!), in many cases without doing any sort of sort of schema assignment
+
+###odbc/drill explorer
 
 
+- talk about ODBC (and 'drill-explorer..') and how it allows you to bring in this data into tableau (although..functionally not everything is ready 
+yet..so gloss that part over)
+
+
+
+- show tableau, draw some pretty pictures, maybe some maps (i'm working on that)
+
+###Bonus: command line queries
+
+Show queries against:
+
+- JSON (look ma..no schema!)
+- hbase (mention it could be m7 or base..) [need to figure out casting properly]
+- hive tables ... much faster than HIVE!  Also: show some ANSI SQL queries that cannot be done in HIVE.
+- parquet files 
 
 
 ##Appendix
@@ -219,4 +254,8 @@ Query HIVE table:
 
 	select * from  hive.`tick` limit 10;
 	
-	
+Show hive tables:
+
+	 select * from INFORMATION_SCHEMA.`TABLES` where TABLE_SCHEMA like 'hive%';
+	 
+

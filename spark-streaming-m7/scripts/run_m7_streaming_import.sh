@@ -51,19 +51,22 @@ fi
 
 ###delete table if it exists
 
-if [ -L /mapr/${CLUSTER}/${TABLENAME} ]
+# if [ -L /mapr/${CLUSTER}/${TABLENAME} ]
+# 	then
+# 		echo "deleting existing table /mapr/${CLUSTER}/${TABLENAME}"
+# 		rm -f  /mapr/${CLUSTER}/${TABLENAME}
+# fi
+
+###Create a new table and CF if one doesnt exist
+
+if ! [ -L /mapr/${CLUSTER}/${TABLENAME} ]
 	then
-		echo "deleting existing table /mapr/${CLUSTER}/${TABLENAME}"
-		rm -f  /mapr/${CLUSTER}/${TABLENAME}
+	mkdir -p /mapr/${CLUSTER}/tables
+
+	maprcli table create -path ${TABLENAME}
+	maprcli table cf create -path ${TABLENAME} -cfname cf1
+	echo "created ${TABLENAME} and CF:cf1"
 fi
-
-###Create a new table and CF
-
-mkdir -p /mapr/${CLUSTER}/tables
-
-maprcli table create -path ${TABLENAME}
-maprcli table cf create -path ${TABLENAME} -cfname cf1
-echo "created ${TABLENAME} and CF:cf1"
 
 
 ###blow away CSV file
