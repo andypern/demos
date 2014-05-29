@@ -28,19 +28,28 @@
 ###packages
 
 * mapr-hbase should be installed on all nodes (so that the HBASE client jars are in place)
-* mapr-hbase-master should be installed on node-1, region server on all nodes.
+* mapr-hbase-master should be installed on node-1, mapr-hbase-regionserver on all nodes.
 * mapr-hivemetastore should be installed on node-1 
 * make sure that hs2 (hiveserver2) is NOT running on node-1. (either disable or put on another node)
 * mapr-hive should be installed on all nodes (just in case) in order to get client jars
 * mysql backend for hivemetastore is optional, but recommended.
 * mapr-drill should be installed on all nodes(grab internally from yum.qa.lab/opensource)
-
+* run configure.sh -R on all nodes to make sure all roles are picked up.
 
 ###Config
 
 ***need to modify memory limits for drill***
 
 Now you'll need to modify some config files:
+
+
+
+Add the HADOOP_HOME variable to the drill-env.sh file:
+
+	echo "export HADOOP_HOME=/opt/mapr/hadoop/hadoop-0.20.2/" >> /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/drill-env.sh
+	
+
+**Note, all of the following assume you are using the 3.0.3 sandbox.  If you are using another cluster/version, pay special attention to the URI's,hostnames and cluster name (look for `maprdemo` and `demo.mapr.com` and replace where necessary)**
 
 
 	vim  /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/storage-plugins.json
@@ -53,8 +62,8 @@ For this demo, we'll be using HIVE, HBASE, and local files (JSON and parquet). M
 	      type: "file",
 	      connection: "maprfs:///",
 	      workspaces: {
-	        "root" : {
-	          location: "/",
+	        "MFS root" : {
+	          location: "/mapr/demo.mapr.com",
 	          writable: false
 	        },
 	        "tmp" : {
@@ -82,29 +91,26 @@ For this demo, we'll be using HIVE, HBASE, and local files (JSON and parquet). M
 	        }
 	      }
 	    },
-	    cp: {
-	      type: "file",
-	      connection: "classpath:///"
-	    },
+	    
 	    hive : {
 	        type:"hive",
 	        config :
 	          {
-	            "hive.metastore.uris" : "thrift://node-1:9083",
+	            "hive.metastore.uris" : "thrift://maprdemo:9083",
 	            "hive.metastore.sasl.enabled" : "false"
 	          }
 	      },
 	      M7 : {
       type:"hbase",
       config : {
-         "hbase.zookeeper.quorum": "10.10.100.56",
+         "hbase.zookeeper.quorum": "maprdemo",
          "hbase.zookeeper.property.clientPort": 5181,
-         "hbase.table.namespace.mappings": "*:/test/tables"
+         "hbase.table.namespace.mappings": "*:/tables"
       },
 	    hbase : {
 	      type:"hbase",
 	      config : {
-	        "hbase.zookeeper.quorum" : "node-1,node-2,node-3",
+	        "hbase.zookeeper.quorum" : "maprdemo",
 	        "hbase.zookeeper.property.clientPort" : 5181
 	      }
 	    }
@@ -119,9 +125,6 @@ copy to all nodes:
 	clush -a -c /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/storage-engines.json 
 
 
-Add the HADOOP_HOME variable to the drill-env.sh file:
-
-	echo "export HADOOP_HOME=/opt/mapr/hadoop/hadoop-0.20.2/" >> /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/drill-env.sh
 
 
 copy to all nodes:
@@ -135,7 +138,7 @@ Modify the zookeeper config drill-override.xml to make sure that it has the righ
 	
 	
 		  zk: {
-	    connect: "node-1:5181,node-2:5181,node-3:5181",
+	    connect: "maprdemo:5181",
 	    root: "/drill",
 	    refresh: 500,
 	    timeout: 5000,
@@ -184,7 +187,7 @@ also:
 
 2.  Go to your NFS loopback mount:
 
-		cd /mapr/clustername
+		cd /mapr/demo.mapr.com
 		
 3.  Grab the entire demos repo (for now..):
 
@@ -196,12 +199,13 @@ also:
 
 5.  Make a folder where our dataset and some other related files will live:
 
-		mkdir -p /mapr/clustername/drill_input
+		mkdir -p /mapr/demo.mapr.com/drill_input
 
 6.  Copy the various files we'll be using into place:
 
-		 cp data/* /mapr/clustername/drill_input
+		 cp data/* /mapr/demo.mapr.com/drill_input
 
+7.  Mount up your cluster via NFS to your desktop, then copy the `drill_input` folder to your desktop so it can be ingested later.
 
 	
 ##Running the demo
@@ -210,29 +214,43 @@ also:
 
 - Show a slide with a diagram showing the components
 - show a slide detailing the clickstream use case
-- talk about how the data comes in different formats, and we don't want to have to do any sort of manipulation to be able to query against it.
+- talk about how  data can come in different formats, and its becoming increasingly important to gain intelligence from this data without spending time developing a pre-defined schema.
+- Discuss that once data is ingested onto a platform, there may be different types of consumers of this data (BI analysts doing ad-hoc query, developers writing applications, management generating long term batch-style reports), so its important to ensure that regardless of how it is stored, it can be accessed through a unified interface.
+
+
 
 ###Dataset intro
-- show snippets of JSON data and CSV data (not on a CLI..do it in a deck/pdf)
+- show snippets of JSON data and CSV data (screenshot).  Highlight that JSON data is self-describing, and that drill is able to discover schema automatically without user intervention.
 
-- explain how drill can access all this (and more!), in many cases without doing any sort of sort of schema assignment
+- Explain that this data can be ingested by several means, including using MapR's NFS interface, which allows full read/write access to the filesystem using standard tools, without client side drivers.
+
+###Ingest example
+
+- Show NFS in action, drag/drop a JSON file onto the cluster.
 
 ###odbc/drill explorer
 
 
-- talk about ODBC (and 'drill-explorer..') and how it allows you to bring in this data into tableau (although..functionally not everything is ready 
-yet..so gloss that part over)
+- talk about ODBC (and 'drill-explorer..') and how it allows you to bring in this data into tableau, excel, and other upstream tools.
+
+- Show the drill-explorer interface, browse through the various data sources (hive, hbase), showing a data preview for each.  Then browse for the JSON data which was most recently loaded and show how drill is able to present the data in a familiar columnar fashion.
+
+- 
 
 
 
-- show tableau, draw some pretty pictures, maybe some maps (i'm working on that)
+- Show a pre-created tableau report and dashboard.  Explain that it is fetching data over ODBC to drill each time an element is modified within the report.  Discuss how it is important that these queries respond in seconds (or less) in order to enable BI users to be more effective.  Mention that only drill is able to tie together not only tables with defined schema (like HIVE), but also files with self-describing schema (JSON) and key-value stores such as Apache HBASE, without applying additional schema or performing transformations (this is a stretch..since talking top HBASE requires casting)
+- within the tableau report, join multiple tables (e.g.: JSON + HIVE)
+
+
+
 
 ###Bonus: command line queries
 
 Show queries against:
 
-- JSON (look ma..no schema!)
-- hbase (mention it could be m7 or base..) [need to figure out casting properly]
+- JSON 
+- hbase (mention it could be m7 or base..) 
 - hive tables ... much faster than HIVE!  Also: show some ANSI SQL queries that cannot be done in HIVE.
 - parquet files 
 
@@ -241,7 +259,7 @@ Show queries against:
 
 ###Shell/Query
 
-Now run sqlline to get to a shell:
+how to run sqlline to get to a shell:
 
 	/opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/bin/sqlline -u jdbc:drill://localhost:31012 -n admin -p admin
 
@@ -252,10 +270,12 @@ Query JSON file:
 
 Query HIVE table:
 
-	select * from  hive.`tick` limit 10;
+	select * from  `hive.default`.sensor limit 10;
 	
 Show hive tables:
 
 	 select * from INFORMATION_SCHEMA.`TABLES` where TABLE_SCHEMA like 'hive%';
 	 
+
+
 

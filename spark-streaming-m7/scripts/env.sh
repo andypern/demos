@@ -20,4 +20,12 @@ JARFILE=${DEMODIR}/m7_streaming_import/target/scala-2.10/m7import_2.10-0.1-SNAPS
 SOURCE_FILE=${BASEDIR}/SensorDataV5.csv
 JAVA_BIN=`which java`
 SLEEPSECS=.25 #sleep secs for data generator to pause between sending
+
+#update path
 export SHARK_BIN=/opt/mapr/shark/shark-0.9.0/bin/shark
+
+#TODO: make some aliases
+# #alias shark-beeline='${SHARK_BIN} --service beeline 
+#  /opt/mapr/shark/shark-0.9.0/bin/shark --service beeline
+
+#  !connect jdbc:hive2://localhost:10000 mapr mapr org.apache.hive.jdbc.HiveDriver

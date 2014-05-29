@@ -214,9 +214,14 @@ The docs for installing shark+spark are mostly complete, but since you'll be usi
 		sh ./create_tables.sh
 
 
+###ODBC and tableau setup
 
+* install shark & cloudera odic drivers and plugins (links needed)
+* in tableau, load up the proper ODBC connection, then choose 'multiple tables', then 'pump view' join with 'maint_table'.  save the connection  (**need screenshots**)
 
-##Running the demo
+##Running the demo the first time 
+The idea here is that you'll populate the tables once, then just re-use them over and over later.
+
 
 ###Populating tables
 

@@ -25,6 +25,10 @@ yum install -y vim
 
 yum install -y mapr-spark-master
 
+#for now, grab impala too
+yum install -y mapr-impala mapr-impala-server mapr-impala-statestore mapr-impala-catalog
+
+
 
 /opt/mapr/server/configure.sh -R
 echo "waiting 20 seconds for spark-master to startup"

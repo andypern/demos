@@ -28,7 +28,8 @@ maprcli table cf create -path ${TABLENAME} -cfname cf1
 # create the maintenance table
 /usr/bin/hive -f create_maint_table.hql
 
-# create a view tying all these tables together.
+# create a view tying 2 of these tables together.
+
 #kickoff sharkserver2, but kill it if its running first
 
 if ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}
@@ -42,7 +43,8 @@ SS2_PID=$!
 echo ${SS2_PID} > ${BASEDIR}/sharkserver2.pid
 disown
 
-
+#wait 15 seconds to let sharkserver2 get running
+sleep 15
 
 #verify we can see tables via JDBC+sharkserver2
 
