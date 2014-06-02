@@ -25,4 +25,6 @@ alias demo-json-dir-select='${SQLLINE} --run=${DRILL_DEMODIR}/scripts/json_dir_s
 alias demo-json-dir-count='${SQLLINE} --run=${DRILL_DEMODIR}/scripts/json_dir_count.sql'
 alias demo-hive-select='${SQLLINE} --run=${DRILL_DEMODIR}/scripts/hive_select.sql'
 
+alias demo-hive-select='${SQLLINE} --run=${DRILL_DEMODIR}/scripts/hive_purchases.sql'
+
 #alias demo-hive-join='${SQLLINE} --run=${DRILL_DEMODIR}/scripts/hive_join.sql'

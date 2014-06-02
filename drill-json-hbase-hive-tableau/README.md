@@ -213,6 +213,33 @@ also:
 	
 ##Running the demo
 
+Between runs, you can re-initialize everything by ssh'ing to the sandbox as root and typing:
+
+	demo-initialize_tables 
+
+This will take about a minute, and should return something like this:
+
+
+
+		+---------------+--------------+------------+------------+
+		| TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME | TABLE_TYPE |
+		+---------------+--------------+------------+------------+
+		| DRILL         | hive.default | users      | TABLE      |
+		| DRILL         | hive.default | clicks     | TABLE      |
+		| DRILL         | M7           | hbusers    | TABLE      |
+		| DRILL         | hbase        | hbusers    | TABLE      |
+		| DRILL         | sys          | drillbits  | TABLE      |
+		| DRILL         | sys          | options    | TABLE      |
+		| DRILL         | INFORMATION_SCHEMA | VIEWS      | TABLE      |
+		| DRILL         | INFORMATION_SCHEMA | COLUMNS    | TABLE      |
+		| DRILL         | INFORMATION_SCHEMA | TABLES     | TABLE      |
+		| DRILL         | INFORMATION_SCHEMA | CATALOGS   | TABLE      |
+		| DRILL         | INFORMATION_SCHEMA | SCHEMATA   | TABLE      |
+		+---------------+--------------+------------+------------+
+		11 rows selected (4.01 seconds)
+		Closing: org.apache.drill.jdbc.DrillJdbc41Factory$DrillJdbc41Connection
+		sqlline version 1.1.6
+
 ###Introduction
 
 - Show a slide with a diagram showing the components
@@ -339,6 +366,12 @@ To launch the SQL-line shell, run the following alias:
 5. Query HIVE tables (no map reduce required!)  :
 
 		demo-hive-select
+		
+		
+6.  Query a HIVE table w/ a WHERE clause (which would normally require map reduce..but not drill!)
+
+		demo-hive-where
+		
 		
 		
 ***Note: joins are problematic right now...***
