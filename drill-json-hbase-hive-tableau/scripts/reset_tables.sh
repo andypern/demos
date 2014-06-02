@@ -57,7 +57,7 @@ sh ${DRILL_DEMODIR}/scripts/import_hbusers.sh
 clush -a "/opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/bin/drillbit.sh restart"
 
 echo "sleeping for 30 seconds to let drillbit startup"
-
+sleep 30;
 # run information schema qry
 
 ${SQLLINE} --run=${DRILL_DEMODIR}/scripts/info_schema.sql
