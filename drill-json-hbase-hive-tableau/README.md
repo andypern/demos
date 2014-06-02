@@ -216,7 +216,6 @@ also:
 ###Introduction
 
 - Show a slide with a diagram showing the components
-- show a slide detailing the clickstream use case
 - talk about how  data can come in different formats, and its becoming increasingly important to gain intelligence from this data without spending time developing a pre-defined schema.
 - Discuss that once data is ingested onto a platform, there may be different types of consumers of this data (BI analysts doing ad-hoc query, developers writing applications, management generating long term batch-style reports), so its important to ensure that regardless of how it is stored, it can be accessed through a unified interface.
 
@@ -229,19 +228,65 @@ also:
 
 ###Ingest example
 
-- Show NFS in action, drag/drop a JSON file onto the cluster.
+Show NFS in action, drag/drop some files onto the cluster:
 
-###odbc/drill explorer
+1.  On your windows desktop there should be a 'drill-data' folder.  Inside are some JSON files.
+2.  right-click/copy, then navigate to the "N:" drive, which is an NFS mount to the cluster (if the NFS mount isn't working, browse to \\hostname\mapr\clustername)
+3.  Go into the drill folder, then the JSON folder.  If there are existing files in there delete them, and copy your files in from your desktop
 
 
-- talk about ODBC (and 'drill-explorer..') and how it allows you to bring in this data into tableau, excel, and other upstream tools.
 
-- Show the drill-explorer interface, browse through the various data sources :
 
-	* hive, 
-	* JSON
 
- Showing a data preview for each.
+
+##odbc/drill explorer
+
+
+ talk about ODBC (and 'drill-explorer..') and how it allows you to bring in this data into tableau, excel, and other upstream tools.
+
+
+
+
+ Show the drill-explorer interface, browse through the various data sources :
+
+	
+1.  double click the `drill-odbc` icon on the desktop
+
+2.  Click the `System DSN` tab
+
+3.  Make sure `drill-demo` is highlighted, then click `Configure`
+
+4.  Click the `Test` button, and make sure it completes successfully
+
+5.  Click the `Drill Explorer` button to launch drill-explorer.
+
+
+Once inside drill explorer, you can navigate and preview some of your data sources.  Note that because drill is still pre-beta, some data sources aren't going to preview properly.
+
+1.  Expand `hive.default`, and click on the `clicks` table.  You should see a preview of the schema and the data.
+
+2.  Expand `hbase`, and expand the `hbusers` table.  It should show you a list of column families.  Note that currently drill explorer isn't able to properly see inside the CF's, that's coming soon.
+
+	> bonus, if you want to get tricky, you can preview the data in the HBASE table properly:
+	
+	* Click the `SQL` tab at the top of the screen
+	*  paste the following in (exactly):
+	
+			select cast(account['id'] as VarChar(20)) as id,
+			cast(account['name'] as VarChar(20)) as name,
+			cast(metrics['gender'] as VarChar(20)) as gender,
+			cast(address['address'] as VarChar(20)) as address,
+			cast(metrics['first_visit'] as VarChar(20)) as first_visit 
+			from `hbase`.`hbusers` limit 10
+			
+	* click the `Preview` button
+	* note that the `Save As` button doesn't work yet, but soon it will allow you to save custom views
+
+3.  Expand `dfs.default` , and browse to `drill`, then `JSON`.  If you have the `JSON` folder highlighted, you see a preview of *all* data within that directory.  If you expand the folder, and click on one of the files, you'll see a preview from just one of those files.
+
+ 
+
+Showing a data preview for each.
 
 
 
@@ -298,10 +343,6 @@ To launch the SQL-line shell, run the following alias:
 		demo-hive-select
 		
 		
-6.  Now do a join between JSON and HIVE
-
-
-7.  How about a join between JSON and HBASE
 
 
 
