@@ -21,11 +21,11 @@ sh ${DEMODIR}/scripts/drop_tables.sh
 
 #first, create the table pointing to M7, but first blow it away and re-create a dummy one.
 
-if [ -L /mapr/${CLUSTER}/${TABLENAME} ]
-	then
-		echo "deleting existing table /mapr/${CLUSTER}/${TABLENAME}"
-		rm -f  /mapr/${CLUSTER}/${TABLENAME}
-fi
+# if [ -L /mapr/${CLUSTER}/${TABLENAME} ]
+# 	then
+# 		echo "deleting existing table /mapr/${CLUSTER}/${TABLENAME}"
+# 		rm -f  /mapr/${CLUSTER}/${TABLENAME}
+# fi
 
 mkdir -p /mapr/${CLUSTER}/tables
 maprcli table create -path ${TABLENAME}
