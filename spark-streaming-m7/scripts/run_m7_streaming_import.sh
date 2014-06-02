@@ -7,7 +7,16 @@
 
 ##the env.sh sets our variables, but if that isn't working you can uncomment and manually set them below.
 
-. ./env.sh
+if [ -f ${DEMODIR}/scripts/env.sh ]
+	then
+	source ${DEMODIR}/scripts/env.sh
+elif [ -f ./env.sh ]
+	then
+	source env.sh
+else
+	echo "env.sh not sourced, you need to chdir to /mapr/clustername/demos/spark-streaming-m7/scripts and run this from there."
+	exit 1
+fi
 
 
 # CLUSTER=summit2014

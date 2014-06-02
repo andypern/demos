@@ -1,6 +1,18 @@
 #!/bin/bash
 
-. ./env.sh
+if [ -f ${DEMODIR}/scripts/env.sh ]
+	then
+	source ${DEMODIR}/scripts/env.sh
+elif [ -f ./env.sh ]
+	then
+	source env.sh
+else
+	echo "env.sh not sourced, you need to chdir to /mapr/clustername/demos/spark-streaming-m7/scripts and run this from there."
+	exit 1
+fi
+
+
+
 
 #first, run drop_tables to make sure we don't have any stuff leftover
 

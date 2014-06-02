@@ -2,6 +2,9 @@
 
 #first stop the shark service via maprcli
 
+
+
+
 SPARK_MASTER_HOST=`maprcli node list -columns hostname,svc|grep spark|awk {'print $2'}`
 echo "stopping spark-master service on ${SPARK_MASTER_HOST}"
 maprcli node services -name spark-master -action stop -nodes ${SPARK_MASTER_HOST}
