@@ -1,5 +1,5 @@
 CREATE EXTERNAL TABLE users
-        (id BIGINT, name STRING,
+        (id INT, name STRING,
         gender STRING,
         address STRING,
         first_visit DATE)
