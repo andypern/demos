@@ -39,11 +39,15 @@ ${DRILL_DEMODIR}/scripts/import_hbusers.sh
 ##HIVE tables
 
 #first delete
-/usr/bin/hive -e "drop table hive_clicks;drop table hive_users;"
+/usr/bin/hive -e "drop table clicks;drop table users;"
 
 
 # create the clicks table
 /usr/bin/hive -f ${DRILL_DEMODIR}/scripts/create_hive_clicks.hql
+
+#create the hive users table:
+/usr/bin/hive -f ${DRILL_DEMODIR}/scripts/create_hive_users.hql
+
 
 # create a view tying 2 of these tables together.
 

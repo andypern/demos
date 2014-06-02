@@ -1,7 +1,7 @@
 CREATE EXTERNAL TABLE clicks(session BIGINT, user_cat STRING, state STRING,
 browser STRING, lang STRING, os STRING,
 id INT, prod_cat STRING, ad_id INT,
-purch_flag INT)
+purch_flag STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ","
 
 STORED AS TEXTFILE LOCATION "/drill/HIVE/clicks";
