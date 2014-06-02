@@ -5,7 +5,7 @@ if [ -f ${DRILL_DEMODIR}/scripts/env.sh ]
 	source ${DRILL_DEMODIR}/scripts/env.sh
 elif [ -f ./env.sh ]
 	then
-	source env.sh
+	source ./env.sh
 else
 	echo "env.sh not sourced, you need to chdir to /mapr/clustername/demos/drill-json-hbase-hive-tableau/scripts and run this from there."
 	exit 1
@@ -31,6 +31,6 @@ echo "create '${TABLE}','${CF1}','${CF2}','${CF3}'" | hbase shell
 # run m/r import job
 hadoop jar $JAR importtsv \
     -Dimporttsv.separator=, \
-    -Dimporttsv.columns=HBASE_ROW_KEY,${CF1}:id,$CF1:name,$CF3:metrics,$CF2:address,$CF3:first_visit \
+    -Dimporttsv.columns=HBASE_ROW_KEY,${CF1}:id,$CF1:name,$CF3:gender,$CF2:address,$CF3:first_visit \
     $TABLE \
     $FILE

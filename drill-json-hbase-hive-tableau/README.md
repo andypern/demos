@@ -236,7 +236,12 @@ also:
 
 - talk about ODBC (and 'drill-explorer..') and how it allows you to bring in this data into tableau, excel, and other upstream tools.
 
-- Show the drill-explorer interface, browse through the various data sources (hive, hbase), showing a data preview for each.  Then browse for the JSON data which was most recently loaded and show how drill is able to present the data in a familiar columnar fashion.
+- Show the drill-explorer interface, browse through the various data sources :
+
+	* hive, 
+	* JSON
+
+ Showing a data preview for each.
 
 
 
@@ -250,12 +255,62 @@ also:
 
 ###Bonus: command line queries
 
-Show queries against:
+All of the queries are located at /mapr/clustername/demos/drill-json-hbase-hive-tableau/scripts .  You can just use the following alias to get there though:
 
-- JSON 
-- against directories full of files.
-- hbase (mention it could be m7 or base..) 
-- hive tables ... much faster than HIVE!  Also: show some ANSI SQL queries that cannot be done in HIVE.
+		demo-scriptdir
+	
+It might be useful to show viewers some of the queries you'll be running.  To save on typing...use the aliases:
+
+
+To launch the SQL-line shell, run the following alias:
+
+	demo-drill-connect
+
+1.  To list out tables via INFORMATION SCHEMA:
+	
+		demo-info_schema
+
+
+2. To query a JSON file :
+
+		demo-json-select
+		
+	Now do a count(*) to show the row count:
+	
+		demo-json-count
+		
+3.  Howabout a whole directory full of JSON:
+
+		demo-json-dir-select
+	Now do a count(*) to show a _larger_ row count:
+	
+		demo-json-dir-count
+		
+		
+4.  Query hbase (mention it could be m7 or Hbase..).  Note that there are some specific 'casts' required, check the `hbase_select.sql` file.
+
+		demo-hbase-select
+
+
+
+5. Query HIVE tables (no map reduce required!)  :
+
+		demo-hive-select
+		
+		
+6.  Now do a join between JSON and HIVE
+
+
+7.  How about a join between JSON and HBASE
+
+
+
+
+
+
+
+
+Also: show some ANSI SQL queries that cannot be done in HIVE.
 - parquet files 
 
 

@@ -28,33 +28,22 @@ echo "disable 'hbusers'; drop 'hbusers';" | hbase shell
 
 # then, create a new hbase table
 
-echo "create 'hbusers','account','address','metrics'" | hbase shell
+
 
 ${DRILL_DEMODIR}/scripts/import_hbusers.sh
 
 
 
-##external table for m7
-#first, create the table pointing to HBASE, but first blow it away and re-create a dummy one.
 
-if [ -L /mapr/${CLUSTER}/${TABLENAME} ]
-	then
-		echo "deleting existing table /mapr/${CLUSTER}/${TABLENAME}"
-		rm -f  /mapr/${CLUSTER}/${TABLENAME}
-fi
 
-mkdir -p /mapr/${CLUSTER}/tables
-maprcli table create -path ${TABLENAME}
-maprcli table cf create -path ${TABLENAME} -cfname cf1
+##HIVE tables
 
-/usr/bin/hive -f ${DEMODIR}/scripts/create_ext_table.hql
+#first delete
+/usr/bin/hive -e "drop table hive_clicks;drop table hive_users;"
 
-#next, create the table used for pump_vendor info:
 
-/usr/bin/hive -f ${DEMODIR}/scripts/create_pump_table.hql
-
-# create the maintenance table
-/usr/bin/hive -f ${DEMODIR}/scripts/create_maint_table.hql
+# create the clicks table
+/usr/bin/hive -f ${DRILL_DEMODIR}/scripts/create_hive_clicks.hql
 
 # create a view tying 2 of these tables together.
 
