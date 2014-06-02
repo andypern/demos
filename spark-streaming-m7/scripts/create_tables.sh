@@ -45,6 +45,15 @@ maprcli table cf create -path ${TABLENAME} -cfname cf1
 /usr/bin/hive -f ${DEMODIR}/scripts/create_join_view.hql
 #kickoff sharkserver2, but kill it if its running first
 
+#only needed for now..
+
+if [ -e /usr/bin/impala-shell ]
+	then
+	/usr/bin/impala-shell -q "invalidate metadata;" > /dev/null 2>&1
+fi
+
+
+
 if ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}
 	then
 	OLD_SHARK_PID=`ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}`
