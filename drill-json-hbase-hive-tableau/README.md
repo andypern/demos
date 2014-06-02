@@ -341,40 +341,11 @@ To launch the SQL-line shell, run the following alias:
 		demo-hive-select
 		
 		
-6.  Join HIVE tables :
-
-		demo-hive-join
-		
-
-
-
-
+***Note: joins are problematic right now...***
 
 
 
 
 
 ##Appendix
-
-###Shell/Query
-
-how to run sqlline to get to a shell:
-
-	/opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/bin/sqlline -u jdbc:drill://localhost:31012 -n admin -p admin
-
-
-Query JSON file:
-
-	select * from  dfs.`/mapr/cluster/ingest/pressure.json` limit 10;
-
-Query HIVE table:
-
-	select * from  `hive.default`.sensor limit 10;
-	
-Show hive tables:
-
-	 select * from INFORMATION_SCHEMA.`TABLES` where TABLE_SCHEMA like 'hive%';
-	 
-
-
 
