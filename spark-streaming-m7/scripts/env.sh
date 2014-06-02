@@ -3,7 +3,7 @@
 
 #clustername below works for the sandbox, you may need to change if you are running on something else
 
-export CLUSTER=demo.mapr.com
+export CLUSTER=`cat /opt/mapr/conf/mapr-clusters.conf |awk {'print $1'}`
 export MYHOST=`hostname`
 export SPARK_URL=spark://${MYHOST}:7077
 export PORT=9999 
