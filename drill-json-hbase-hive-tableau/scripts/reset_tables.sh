@@ -46,7 +46,7 @@ echo "disable 'hbusers'; drop 'hbusers';" | hbase shell
 
 
 
-${DRILL_DEMODIR}/scripts/import_hbusers.sh
+sh ${DRILL_DEMODIR}/scripts/import_hbusers.sh
 
 
 
