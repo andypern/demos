@@ -17,7 +17,7 @@
 * Windows7 or 2008_server_R2 or above
 * NFS client configured 
 * Tableau 8.1 installed
-* Drill ODBC/drill explorer? ***TBD***
+* Drill ODBC/drill explorer
 * copy TDC file into the Tableau datasources folder (**need detail**)
 
 ###Cluster
@@ -238,12 +238,12 @@ also:
 
 - Show the drill-explorer interface, browse through the various data sources (hive, hbase), showing a data preview for each.  Then browse for the JSON data which was most recently loaded and show how drill is able to present the data in a familiar columnar fashion.
 
-- 
+
 
 
 
 - Show a pre-created tableau report and dashboard.  Explain that it is fetching data over ODBC to drill each time an element is modified within the report.  Discuss how it is important that these queries respond in seconds (or less) in order to enable BI users to be more effective.  Mention that only drill is able to tie together not only tables with defined schema (like HIVE), but also files with self-describing schema (JSON) and key-value stores such as Apache HBASE, without applying additional schema or performing transformations (this is a stretch..since talking top HBASE requires casting)
-- within the tableau report, join multiple tables (e.g.: JSON + HIVE)
+
 
 
 
