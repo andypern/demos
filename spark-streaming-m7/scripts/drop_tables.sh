@@ -15,7 +15,7 @@ fi
 
 #if need be , blow away all tables + views
 
-hive -e "drop table sensor;drop table pump_info; drop table maint_table; drop view pumpview;"
+hive -e "drop table sensor;drop table pump_info; drop table maint_table;"
 
 
 echo "now you need to run ${DEMODIR}/scripts/create_tables.sh"
