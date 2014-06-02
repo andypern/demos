@@ -290,9 +290,7 @@ Showing a data preview for each.
 
 
 
-
-
-- Show a pre-created tableau report and dashboard.  Explain that it is fetching data over ODBC to drill each time an element is modified within the report.  Discuss how it is important that these queries respond in seconds (or less) in order to enable BI users to be more effective.  Mention that only drill is able to tie together not only tables with defined schema (like HIVE), but also files with self-describing schema (JSON) and key-value stores such as Apache HBASE, without applying additional schema or performing transformations (this is a stretch..since talking top HBASE requires casting)
+Talk about how ODBC support for Tableau is coming soon!
 
 
 
@@ -343,6 +341,10 @@ To launch the SQL-line shell, run the following alias:
 		demo-hive-select
 		
 		
+6.  Join HIVE tables :
+
+		demo-hive-join
+		
 
 
 
@@ -350,9 +352,6 @@ To launch the SQL-line shell, run the following alias:
 
 
 
-
-Also: show some ANSI SQL queries that cannot be done in HIVE.
-- parquet files 
 
 
 ##Appendix
