@@ -15,6 +15,27 @@ fi
 
 
 
+
+
+##HIVE tables
+
+#first delete
+/usr/bin/hive -e "drop table clicks;drop table users;"
+
+
+#put datasets into place
+
+mkdir -p ${DRILL_BASEDIR}
+cp -R ${DRILL_DEMODIR}/data/* ${DRILL_BASEDIR}
+
+
+# create the clicks table
+/usr/bin/hive -f ${DRILL_DEMODIR}/scripts/create_hive_clicks.hql
+
+#create the hive users table:
+/usr/bin/hive -f ${DRILL_DEMODIR}/scripts/create_hive_users.hql
+
+
 ##HBASE section##
 
 #first, delete the hbase tables
@@ -30,18 +51,6 @@ ${DRILL_DEMODIR}/scripts/import_hbusers.sh
 
 
 
-
-##HIVE tables
-
-#first delete
-/usr/bin/hive -e "drop table clicks;drop table users;"
-
-
-# create the clicks table
-/usr/bin/hive -f ${DRILL_DEMODIR}/scripts/create_hive_clicks.hql
-
-#create the hive users table:
-/usr/bin/hive -f ${DRILL_DEMODIR}/scripts/create_hive_users.hql
 
 ##start/restart drill
 
