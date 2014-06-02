@@ -17,7 +17,7 @@ fi
 #first, run drop_tables to make sure we don't have any stuff leftover
 
 echo "cleaning up tables that may already exist"
-sh ./drop_tables.sh
+sh ${DEMODIR}/scripts/drop_tables.sh
 
 #first, create the table pointing to M7, but first blow it away and re-create a dummy one.
 
@@ -31,17 +31,18 @@ mkdir -p /mapr/${CLUSTER}/tables
 maprcli table create -path ${TABLENAME}
 maprcli table cf create -path ${TABLENAME} -cfname cf1
 
-/usr/bin/hive -f create_ext_table.hql
+/usr/bin/hive -f ${DEMODIR}/scripts/create_ext_table.hql
 
 #next, create the table used for pump_vendor info:
 
-/usr/bin/hive -f create_pump_table.hql
+/usr/bin/hive -f ${DEMODIR}/scripts/create_pump_table.hql
 
 # create the maintenance table
-/usr/bin/hive -f create_maint_table.hql
+/usr/bin/hive -f ${DEMODIR}/scripts/create_maint_table.hql
 
 # create a view tying 2 of these tables together.
 
+/usr/bin/hive -f ${DEMODIR}/scripts/create_join_view.hql
 #kickoff sharkserver2, but kill it if its running first
 
 if ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}
