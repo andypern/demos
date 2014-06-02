@@ -18,6 +18,7 @@
 * NFS client configured 
 * Tableau 8.1 installed
 * Drill ODBC/drill explorer? ***TBD***
+* copy TDC file into the Tableau datasources folder (**need detail**)
 
 ###Cluster
 
@@ -30,7 +31,6 @@
 * mapr-hbase should be installed on all nodes (so that the HBASE client jars are in place)
 * mapr-hbase-master should be installed on node-1, mapr-hbase-regionserver on all nodes.
 * mapr-hivemetastore should be installed on node-1 
-* make sure that hs2 (hiveserver2) is NOT running on node-1. (either disable or put on another node)
 * mapr-hive should be installed on all nodes (just in case) in order to get client jars
 * mysql backend for hivemetastore is optional, but recommended.
 * mapr-drill should be installed on all nodes(grab internally from yum.qa.lab/opensource)
@@ -47,6 +47,12 @@ Now you'll need to modify some config files:
 Add the HADOOP_HOME variable to the drill-env.sh file:
 
 	echo "export HADOOP_HOME=/opt/mapr/hadoop/hadoop-0.20.2/" >> /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/drill-env.sh
+	
+	
+copy to all nodes:
+
+	clush -a -c /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/drill-env.sh
+	
 	
 
 **Note, all of the following assume you are using the 3.0.3 sandbox.  If you are using another cluster/version, pay special attention to the URI's,hostnames and cluster name (look for `maprdemo` and `demo.mapr.com` and replace where necessary)**
@@ -106,6 +112,7 @@ For this demo, we'll be using HIVE, HBASE, and local files (JSON and parquet). M
          "hbase.zookeeper.quorum": "maprdemo",
          "hbase.zookeeper.property.clientPort": 5181,
          "hbase.table.namespace.mappings": "*:/tables"
+         }
       },
 	    hbase : {
 	      type:"hbase",
@@ -127,10 +134,6 @@ copy to all nodes:
 
 
 
-copy to all nodes:
-
-	clush -a -c /opt/mapr/drill/drill-1.0.0/apache-drill-1.0.0-m2-incubating-SNAPSHOT/conf/drill-env.sh
-	
 
 Modify the zookeeper config drill-override.xml to make sure that it has the right has the right zookeeper host:port pair for  (default config uses localhost:2181, many ZK installs will listen on port 5181):
 
@@ -250,6 +253,7 @@ also:
 Show queries against:
 
 - JSON 
+- against directories full of files.
 - hbase (mention it could be m7 or base..) 
 - hive tables ... much faster than HIVE!  Also: show some ANSI SQL queries that cannot be done in HIVE.
 - parquet files 

@@ -21,11 +21,26 @@ SOURCE_FILE=${BASEDIR}/SensorDataV5.csv
 JAVA_BIN=`which java`
 SLEEPSECS=.25 #sleep secs for data generator to pause between sending
 
+
 #update path
 export SHARK_BIN=/opt/mapr/shark/shark-0.9.0/bin/shark
+#aliases
+alias shark-beeline='${SHARK_BIN} --service beeline -u jdbc:hive2://localhost:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver'
 
-#TODO: make some aliases
-# #alias shark-beeline='${SHARK_BIN} --service beeline 
-#  /opt/mapr/shark/shark-0.9.0/bin/shark --service beeline
+alias step-1_start_listener='sh ${DEMODIR}/scripts/start_listener.sh'
+alias step-2_start_streaming='sh ${DEMODIR}/scripts/run_m7_streaming_import.sh'
+alias step-3_push_data='sh ${DEMODIR}/scripts/push_data.sh'
+alias step-4_table_scan='echo "scan '\''/tables/sensortable'\'', {LIMIT => 3}" | hbase shell'
+alias step-5_shark_beeline='${SHARK_BIN} --service beeline -u jdbc:hive2://localhost:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver'
 
-#  !connect jdbc:hive2://localhost:10000 mapr mapr org.apache.hive.jdbc.HiveDriver
+alias step-YY_stop_datastream='sh ${DEMODIR}/scripts/stop_datastream.sh'
+
+alias step-XX_restart_services='sh ${DEMODIR}/scripts/restart_services.sh'
+
+
+
+#TODO: more aliases
+# alias /opt/mapr/spark/spark-0.9.1/sbin/start-slaves.sh 
+# alias /opt/mapr/shark/shark-0.9.0/bin/shark --service sharkserver2 & 
+
+#TODO: get env.sh sourced in .bash_profile

@@ -219,43 +219,85 @@ The docs for installing shark+spark are mostly complete, but since you'll be usi
 * install shark & cloudera odic drivers and plugins (links needed)
 * in tableau, load up the proper ODBC connection, then choose 'multiple tables', then 'pump view' join with 'maint_table'.  save the connection  (**need screenshots**)
 
-##Running the demo the first time 
+
+##Running the demo
+
 The idea here is that you'll populate the tables once, then just re-use them over and over later.
+
+
+
+###Intro
+
+Show slide deck, stepping through the animations before proceeding.
+
+* Pop into the MCS console, showing the cluster dashboard.  Highlight the 'spark-master' service running.  
+* click on the 'spark master' icon in the lower-left, and then click the pop out to open a new tab, pointing to the spark-master UI.  Explain that there are 3 spark slaves running, each of which is available to share in the application load, and each of which will be leveraging CPU, RAM, and local storage for running applications and jobs.  Spark can be configured on a per application basis to utilize a specific amount of CPU and memory, and leverages data-locality in MapRFS to get the best possible performance.
+* Discuss how Spark uses a Directed-Acyclic-Graph (DAG) to minimize redundant processing and maximize efficiency when running applications.
+* Show that Sharkserver2 is running a an application, and explain that to spark, its just another app that can utilize resources in a coordinated and controlled manner.
+* If you like, click on the shark application, then on `Application Detail UI` to show that you can even see the queries which have been run against sharkserver2, and the completion times in ms/s.
+
+
+Now, lets get the data flow started.  switch to your screen w/ terminals loaded.
 
 
 ###Populating tables
 
-1.  Make sure you have 3 terminal windows ssh'd into the cluster, where you've cd'd into the following directory:
+1.  Make sure you have 3 terminal windows ssh'd into the cluster.  Put them all in the scripts folder:
 
-			
+		cd /mapr/demo.mapr.com/demos/spark-streaming-m7/scripts
+		
+2.  Then, source the env.sh file:
 
-2.  In `terminal-1`, startup the listener:
+		source /mapr/demo.mapr.com/demos/spark-streaming-m7/scripts/env.sh
+		
+	>this gives you some handy aliases..
+		
+	
+
+3.  In `terminal-1`, startup the listener:
 
 		sh ./start_listener.sh
->this will kick off netcat, and drop you back into the shell
+		
+	or, use the alias:
+	
+		step-1_start_listener
+	
+		
+	>this will kick off netcat, and drop you back into the shell
 
 
-3.  Again in  `terminal-1`, launch the spark-streaming script, which will get our app running and ready to receive data: 
+4.  Again in  `terminal-1`, launch the spark-streaming script, which will get our app running and ready to receive data: 
 
 		sh ./run_m7_streaming_import.sh 
->After about 30 seconds the output will stop, and it will be ready to receive data. 
+		
+	Or, use the alias:
+	
+		step-2_start_streaming
+	
+	>After about 30 seconds the output will stop, and it will be ready to receive data.  Explain that the application is able to not only receive data as it is generated, but also insert into an M7 table, while creating a composite-key based on some of the columns, to generate a unique key which is : "PUMP_NAME_Date_Time".  Explain that the application could easily be retooled to base its composite key off of a different set of columns, or even use random numbers to spread it across regions differently.
 
-
-4. Now in `terminal-2`, start pushing data.  Note that you can stop/start this at will, so long as you leave the listener and spark-streaming app running:
+5. Now in `terminal-2`, start pushing data.  Note that you can stop/start this at will, so long as you leave the listener and spark-streaming app running:
 
 		sh ./push_data.sh
+		
+	Or, use the alias:
+	
+		step-3_push_data
 	
 	> output will show you one row every SLEEPSECS.  Notice that every BATCHSECS `terminal-1` will show some output as well..
 
 
-5. Wait about 60 seconds for data to populate our table In `terminal-3` we're going to look at the table and make sure that data is appearing:
+6. Wait about 60 seconds for data to populate our table In `terminal-3` we're going to look at the table and make sure that data is appearing:
+
+		echo "scan '/tables/sensortable', {LIMIT => 3}" | hbase shell
 
 
-		hbase shell
+	Or, use the alias:
+	
+		step-4_table_scan
+		
+		
 
-
-		>scan '/tables/sensortable', {LIMIT => 5}
-> hit 'crtl-d' to exit this prompt
 
 ###External access to tables
 		
@@ -264,7 +306,17 @@ In order for other applications (shark, and subsequently, tableau) to get access
 
 In `terminal-3`, verify that you can run shark against this table and see data:
 
-		/opt/mapr/shark/shark-0.9.0/bin/shark -e "select * from sensor limit 10;"
+		shark-beeline
+		
+Or, use the alias:
+
+	step-5_shark_beeline
+	
+		> show tables ;
+		>  select * from pumpview limit 10;
+>note that this query may take 10 seconds or so the first time its run, but subsequent runs will be faster.  Explain that this is a view which is joining together both our M7 external table, as well as a HIVE external table based on a CSV file containing static information about each pump (vendor name, etc)
+
+
 
 
 
@@ -272,32 +324,27 @@ In `terminal-3`, verify that you can run shark against this table and see data:
 Now that you've shown that the data is accessible via SHARK queries, its time to move on to tableau.
 
 
-##Everything below doesn't work
-
-
-
-
-
-
-
-
-
 
 ### Tableau
 
-(***5-10 mins***)
 
-Switch to your windows desktop, and open the Tableau window.
 
-* choose the datasource (already preconfigured), explain how this is initiating an ODBC connection to MapR
+Switch to your windows desktop, and open the Tableau window.  If tableau is not launched, do so by double-clicking the 'pumps' icon on the desktop.
+
+
 * Browse through sheets in tableu (pre-made).  Explain how each sheet/chart is generated by a series of SQL queries which tableau issues to mapR, and how user interactivity is dependent on fast response time to queries.
 
-	* pump vendor differences (which have best flow-rate and/or pressure)
-	* all pumps on a timeline, showing the peaks/valleys of the pressure and flow rates
-	* isolate one specific pump which has dropped its pressure entirely
-	* drag the 'displace' measurement and describe what it is (vibration)
-	* once the screen redraws, show that when displacement reaches too high of a value, directly afterwards the pump pressure drops to zero
-	* reselect other pumps to see if any others are starting to exhibit high displacement rates, or low pressure.
+The story here is that we know that one of our pumps failed, and we want to see why. We also want to see if there are any contributing factors (vendor, maintenance schedule, or other measurements) that seem to cause failure or abnormal behavior.
+
+* Sheets include:
+
+	* `pump-quikview` : Shows each pump/resource-id and the sum of its flow rate (output)
+	* `vendors` : Shows breakdown of each pump vendor, and their avg PSI (pressure).  2 are similar..one is significantly off.  Rolling mouse-over gives useful stats.
+	* `pump pressure` : bar chart showing each pump's average PSI (pressure) rates.  One seems a bit low...
+	* `pressure drop`: all pumps on a timeline, showing the peaks/valleys of the pressure and flow rates.  For the most part all pumps show even/steady pressure. Two pumps seem to drop off to the right...
+	* `failure` : another timeline view, this time we look at both the PSI (upper chart) and Displacement (lower).  Mousing over displacement just prior to pressure drop seems to indicate that high displacement leads to failure..
+	* `technician fail`: A filtered view, where only the two problematic pumps are displayed (you can modify the filter set if you like).  Also notice that the problematic pumps are made by the same vendor...
+
 
 
 Q+A and closing.
