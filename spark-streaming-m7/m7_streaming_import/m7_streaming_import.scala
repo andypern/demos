@@ -14,7 +14,7 @@ This should allow the connection to stay open, and be able to shove whatever you
 
 /*TODO:
 - decide how to chunk output files up..eg: every minute? hour? day? # of rows?
-- nice-to-have: figure out dstream 'windows' and spit something out to web/D3 somehow..
+- nice-to-have: figure out dstream 'windows' and spit something out to web/D3 somehow....
 - Take out any hardcoded paths.
 - When saving RDD to disk, may be useful to output with the 'dateTime' squashed field instead of the date,time fields (for tableau)
 - use KAFKA or another messaging system as the input (per Ted)
