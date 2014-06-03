@@ -41,6 +41,9 @@ import org.apache.hadoop.hbase.client.{HBaseAdmin,HTable,Put,Get}
 import org.apache.hadoop.hbase.util.Bytes
 import com.google.common.io.Files
 import java.nio.charset.Charset
+//for json conversion:
+import spray.json._
+import DefaultJsonProtocol._ // !!! IMPORTANT, else `convertTo` and `toJson` won't work correctly
 
 
 
@@ -173,6 +176,10 @@ object m7import {
           rdd.saveAsTextFile("/mapr/shark/CSV/" + csvDir )
           */
           println("dumped " + linecount + " rows to table " + tablename + " and wrote them to " + outputPath)
+          //print some ugly ass json too
+          val json_linecount = linecount.toJson
+          println("json" + json_linecount )
+          
          
           //needless println
           //println("record array length: " + rddarray.length + " first row: " + rddarray(0))
