@@ -27,6 +27,7 @@ fi
 
 mkdir -p ${DRILL_BASEDIR}
 cp -R ${DRILL_DEMODIR}/data/* ${DRILL_BASEDIR}
+chmod -R 777 ${DRILL_BASEDIR}
 
 
 # create the clicks table
