@@ -124,7 +124,7 @@ done
 
 #lastly, grab JARS from scala dir
 
-for jar in `find $SCALA_HOME -name 'scala*.jar'`; do
+for jar in `find $SCALA_HOME -name '*.jar'`; do
 	CLASSPATH+=:$jar
 done
 
