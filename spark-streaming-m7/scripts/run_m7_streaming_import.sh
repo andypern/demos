@@ -122,11 +122,15 @@ done
 
 ####end MapR stuff 
 
-#lastly, grab JARS from scala dir
+#grab JARS from scala dir
 
-for jar in `find $SCALA_HOME -name '*.jar'`; do
+for jar in `find $SCALA_HOME -name 'scala*.jar'`; do
 	CLASSPATH+=:$jar
 done
+
+#grab our special spray jar
+
+CLASSPATH+=:${SCALA_HOME}/spray-json_2.11-1.2.6.jar
 
 # Add in the mapR FS jar
 
