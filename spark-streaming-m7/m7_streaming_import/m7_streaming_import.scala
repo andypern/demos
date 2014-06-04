@@ -176,7 +176,7 @@ object m7import {
               ("SedimentPPM" -> sedPPM) ~
               ("PSI" -> psi) ~
               ("ChlorinepPM" -> chlPPM)
-            println(compact(render(json)))
+            println(pretty(render(json)))
           
           }
           /*now that each of the rows are in m7 , lets dump the entire RDD to disk.
