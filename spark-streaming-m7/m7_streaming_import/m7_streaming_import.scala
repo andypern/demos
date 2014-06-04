@@ -137,7 +137,9 @@ object m7import {
              //time to split this row into words, from scala-cookbook, the .trim removes leading/trailing
              //spaces from the values.
             val Array(resID, date, time, hz, disp, flo, sedPPM, psi, chlPPM) = line.split(",").map(_.trim)
-            
+            val jsonArray = Array.toJson
+
+            println("json " + jsonArray)
             //since tableau is lame about datefields, need to combine date+time
             val dateTime = date + " " + time
             // Time to create a compositekey
@@ -178,8 +180,8 @@ object m7import {
           */
           println("dumped " + linecount + " rows to table " + tablename + " and wrote them to " + outputPath)
           //print some ugly ass json too
-          val json_linecount = linecount.toJson
-          println("json" + json_linecount )
+          //val json_linecount = linecount.toJson
+          //println("json" + json_linecount )
           
          
           //needless println
