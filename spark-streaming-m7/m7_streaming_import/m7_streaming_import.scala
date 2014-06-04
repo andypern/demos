@@ -41,16 +41,17 @@ import org.apache.hadoop.hbase.client.{HBaseAdmin,HTable,Put,Get}
 import org.apache.hadoop.hbase.util.Bytes
 import com.google.common.io.Files
 import java.nio.charset.Charset
-//for json conversion:
-import spray.json._
-import DefaultJsonProtocol._ // !!! IMPORTANT, else `convertTo` and `toJson` won't work correctly
-
 
 
 /** probably better to package the logging function up as a separate class, but for now this is fine */
 
 import org.apache.spark.Logging
 import org.apache.log4j.{Level, Logger}
+//for json conversion:
+import spray.json._
+import DefaultJsonProtocol._ // !!! IMPORTANT, else `convertTo` and `toJson` won't work correctly
+
+
 
 /** Utility functions for Spark Streaming examples. */
 object StreamingExamples extends Logging {
