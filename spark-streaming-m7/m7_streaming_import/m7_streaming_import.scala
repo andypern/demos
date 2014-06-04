@@ -41,15 +41,14 @@ import org.apache.hadoop.hbase.client.{HBaseAdmin,HTable,Put,Get}
 import org.apache.hadoop.hbase.util.Bytes
 import com.google.common.io.Files
 import java.nio.charset.Charset
-
+//for json conversion:
+import org.json4s._
+import org.json4s.native.JsonMethods._
 
 /** probably better to package the logging function up as a separate class, but for now this is fine */
 
 import org.apache.spark.Logging
 import org.apache.log4j.{Level, Logger}
-//for json conversion:
-import spray.json._
-import DefaultJsonProtocol._ // !!! IMPORTANT, else `convertTo` and `toJson` won't work correctly
 
 
 
@@ -137,9 +136,6 @@ object m7import {
              //time to split this row into words, from scala-cookbook, the .trim removes leading/trailing
              //spaces from the values.
             val Array(resID, date, time, hz, disp, flo, sedPPM, psi, chlPPM) = line.split(",").map(_.trim)
-            val jsonline = line.toJson
-
-            println("json " + jsonline)
             //since tableau is lame about datefields, need to combine date+time
             val dateTime = date + " " + time
             // Time to create a compositekey
@@ -168,6 +164,18 @@ object m7import {
     
             table.put(tblPut)
             Files.append(resID + "," + dateTime + "," + hz + "," + disp + "," + flo + "," + sedPPM + "," + psi + "," + chlPPM + "\n", outputFile, Charset.defaultCharset())
+
+            val json = 
+              ("PumpID" -> resID) ~
+              ("date" -> date) ~
+              ("time" -> time) ~
+              ("HZ" -> hz) ~
+              ("Displacement" -> disp) ~
+              ("Flow" -> flo) ~
+              ("SedimentPPM" -> sedPPM) ~
+              ("PSI" -> psi) ~
+              ("ChlorinepPM" -> chlPPM)
+            println(compact(redner(json)))
           
           }
           /*now that each of the rows are in m7 , lets dump the entire RDD to disk.
@@ -179,9 +187,7 @@ object m7import {
           rdd.saveAsTextFile("/mapr/shark/CSV/" + csvDir )
           */
           println("dumped " + linecount + " rows to table " + tablename + " and wrote them to " + outputPath)
-          //print some ugly ass json too
-          //val json_linecount = linecount.toJson
-          //println("json" + json_linecount )
+
           
          
           //needless println

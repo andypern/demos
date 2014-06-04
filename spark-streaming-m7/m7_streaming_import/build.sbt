@@ -6,7 +6,7 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % "0.9.1",
   "org.apache.hbase" % "hbase" % "0.94.17",
   "com.github.nscala-time" %% "nscala-time" % "1.0.0",
-  "io.spray" %%  "spray-json" % "1.2.6"
+  "org.json4s" %% "json4s-native" % "3.2.9"
 )
 
 resolvers ++= Seq( "Akka Repository" at
