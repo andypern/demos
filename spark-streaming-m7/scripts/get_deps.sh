@@ -17,6 +17,7 @@ fi
 ln -s /usr/bin/java /bin/java
 
 echo 0 > /selinux/enforce
+sed -i 's/=enforcing/=disabled/' /etc/selinux/config
 ssh-keygen -f /root/.ssh/id_rsa -t rsa -P ""
 cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
 
