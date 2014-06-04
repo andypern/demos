@@ -43,6 +43,7 @@ import com.google.common.io.Files
 import java.nio.charset.Charset
 //for json conversion:
 import org.json4s._
+import org.json4s.JsonDSL._
 import org.json4s.native.JsonMethods._
 
 /** probably better to package the logging function up as a separate class, but for now this is fine */
