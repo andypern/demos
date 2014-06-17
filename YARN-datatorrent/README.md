@@ -1,4 +1,6 @@
-#setup
+#DataTorrent Demo setup
+
+
 
 The following assumes you have a 5-node cluster, but obviously you don't need one.  Ideally you have 3 nodes, each with at least 8GB of RAM, since the DT demos tend to like to use memory. I haven't tested on a sandbox yet, but may do so and revise this document.
 
@@ -201,7 +203,7 @@ Datatorrent also has a web interface for use specifically with the bundled demos
 
 		cp bin/node /usr/local/bin
 
-4.  Go to the data torrent demo's UI
+4.  Go to the Datatorrent demo's UI
 
 		cd /opt/datatorrent/releases/1.0.0/demos/ui
 	
@@ -220,34 +222,50 @@ Datatorrent also has a web interface for use specifically with the bundled demos
 >(may want to run inside a 'screen' session)
 
 
-note: to be able to start apps as someone other than 'mapr' =>
-if you want to start application as other user. you can change
-/opt/mapr/hadoop/hadoop-2.3.0/etc/hadoop/container-executor.cfg :
 
-min.user.id=500
-allowed.system.users=mapr
 
-obviously change this..
 
 
 
 ##Running the mobile demo:
+
+The demo which seems to work the best, and has some interactivity, is the Mobile demo.
 All steps done on the gateway node:
 
  
 
-* su mapr
-* dtcli
-* launch-demos
+1.  make sure you are the `mapr` user
 
-choose 9
+		su mapr
+
+>note: to be able to start apps as someone other than 'mapr' =>
+if you want to start application as other user. you can change
+/opt/mapr/hadoop/hadoop-2.3.0/etc/hadoop/container-executor.cfg :
+
+	min.user.id=500
+	allowed.system.users=mapr
+
+2. Launch the Datatorrent CLI:
+
+		dtcli
+
+3.  In the DTcli shell, run the `launch-demos` script:
+
+		launch-demos
+
+4.  Choose option 9
+
+At this point you can switch to the DT UI (port 9090) as well as to the demo UI (port 3003).  
 
 
+##Everything below is unfinished/untested
 
-phonegen: simulates a cell tower
-'prove' is doing computation
-updates in memory store for each location for each cell phone number.
-can input a query to the running app and see if in the special app-UI
+###Quick explanation of the mobile demo
+
+* `phonegen`: simulates a cell tower
+
+* `pmove` is doing computation, and updates in memory store for each location for each cell phone number.
+
 
 if drops below 10,000/sec, the partitions will be reduced/squashed. if it exceeds 30k, it splits and requests more resources
 
@@ -341,6 +359,9 @@ ignore most of the below..unless you need it because something breaks.
 
 
 
+
+
+
 ###repos
 Hopefully the steps below won't be necessary once FCS gets pushed to a more mainstream repo.
 
@@ -360,7 +381,7 @@ This goes to my FIOS line @ home...don't use constantly please or my episode of 
 
 
 ####fix repo
-Need to do this because the repo has issues..not sure why.
+Need to do this because the repo has issues..not sure why. Likely this will be fixed in official FCS release.
 
 
 	yum install -y createrepo
@@ -441,66 +462,3 @@ copy to all nodes:
 
 
 
-###getting mr1 to work
-
-put this in .bashrc and .bash_profile:
-
-export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk.x86_64
-
-
-and copy to all nodes.
-
-clush -a -c /root/.bashrc 
-clush -a -c /root/.bash_profile
-
-
-* had to modify logs/pids directory permissions for jt/tt
- 
-* turns out that you must NOT install resource manager on more than one node right now, and in configure.sh you must not specify two RM's, or else it will break things.
-DT install instructions: https://www.datatorrent.com/docs/README.md
-
-* bunch of complaining in /opt/mapr/hadoop/hadoop-0.2*/logs => 
-
-Caused by: java.lang.ClassNotFoundException: org.apache.hadoop.ipc.VersionedProtocol
-
-seems to indicate that the following jar is needed:
-
-[root@ip-172-16-1-99 conf]# find /opt/mapr/hadoop -name "*.jar" -exec grep -H org.apache.hadoop.ipc.VersionedProtocol {} \;
-Binary file /opt/mapr/hadoop/hadoop-2.3.0/share/hadoop/httpfs/tomcat/webapps/webhdfs/WEB-INF/lib/hadoop-common-2.3.0-mapr-4.0.0-FCS.jar matches
-
-1.  create /opt/mapr/hadoop/hadoop-0.20.2/conf
-2.  copy everything from conf.new into there
-[root@ip-172-16-1-126 conf]# clush -a "chown -R mapr /opt/mapr/hadoop/hadoop-0.20.2/conf"
-[root@ip-172-16-1-126 conf]# clush -a "chmod -R 755 /opt/mapr/hadoop/hadoop-0.20.2/conf"
-
-mapred-site.xml:
-
-  <property>
-    <name>mapreduce.tasktracker.group</name>
-    <value>mapr</value>
-    
-    
-don't forget to copy to all nodes.
-
-clush -a "chgrp mapr /opt/mapr/hadoop/hadoop-0.20.2/bin/Linux-amd64-64/bin/*"
-
-clush -a "chmod 744 /opt/mapr/hadoop/hadoop-0.20.2/bin/Linux-amd64-64/bin/*"
-
-clush -a "chmod u+s /opt/mapr/hadoop/hadoop-0.20.2/bin/Linux-amd64-64/bin/*"
-
-
-5.  add to hadoop-env.sh:
-
-
-
-f
-or jar in `find /opt/mapr/hadoop/hadoop-2.3.0/share/hadoop/common -name '*.jar'`;do
-        HADOOP_CLASSPATH+=:$jar
-done
-
-
-copy to all nodes
-
-
-b
-ut why ?
