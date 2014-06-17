@@ -109,49 +109,116 @@ restart warden just to be sure.
 
 
 ###make sure NFS works
+These steps may not be necessary depending on your environment, but just in case:
 
-clush -a 'mkdir -p /mapr'
-echo "localhost:/mapr /mapr   hard,intr,nolock" > /opt/mapr/conf/mapr_fstab
-clush -a -c /opt/mapr/conf/mapr_fstab
-clush -a 'service mapr-nfsserver restart'
+1.  Make a /mapr dir:
 
-then 'df' on all nodes after a minute to make sure its there.
+		clush -a 'mkdir -p /mapr'
 
+2.  Create a mapr_fstab file:
 
-## installing dt
+		echo "localhost:/mapr /mapr   hard,intr,nolock" > /opt/mapr/conf/mapr_fstab
+3.  Copy around:
 
+		clush -a -c /opt/mapr/conf/mapr_fstab
 
-cd /tmp
+4.  Restart NFS service for good measure:
 
-wget https://www.datatorrent.com/downloads/datatorrent-rts.bin
+		clush -a 'service mapr-nfsserver restart'
 
-  		chmod a+x ./datatorrent-rts*.bin
+5.  Check on all nodes after a minute to make sure its there:
+
+		clush -a "df|grep mapr"
   
-    	./datatorrent-rts*.bin
+
+
+
+## installing datatorrent
+
+1.  Pull down the installer:
+
+		cd /tmp
+		wget https://www.datatorrent.com/downloads/datatorrent-rts.bin
+2.  Make it executable:
+
+		chmod a+x ./datatorrent-rts*.bin
+  
+3.  Run it
+
+		./datatorrent-rts*.bin
     	
-   if all went well, you should see:
+	>if all went well, you should see:
    
-	   DTGateway is running as pid 5021 and listening on 0.0.0.0:9090
+		   DTGateway is running as pid 5021 and listening on 0.0.0.0:9090
+		
+		Please connect to DTGateway with a browser at http://ip-172-16-1-148:9090/ to finish remaining installation steps.  Additional documentation available from http://www.datatorrent.com/
 	
-	Please connect to DTGateway with a browser at http://ip-172-16-1-148:9090/ to finish remaining installation steps.  Additional documentation available from http://www.datatorrent.com/
 	
-note: installed dt on yarn-dt-node2 : 
-
-http://yarn-dt-node2:9090/static/#welcome
-
- mkdir -p /mapr/yarn-dt/user/dtadmin
-
- chown dtadmin /mapr/yarn-dt/user/dtadmin
+##Configuring datatorrent
 
 
+1.  Make a directory that DT can use for various things:
 
-in the UI, specify this for 'dfs location':
+		mkdir -p /mapr/clustername/user/dtadmin
 
-/mapr/yarn-dt/user/dtadmin/datatorrent
 
-clush -a 'groupadd -g 499 dtadmin'
-clush -a 'useradd -g 499 -u 498 dtadmin'
-clush -a 'echo "dtadmin" | passwd --stdin dtadmin'
+2.  chown it to be owned by dtadmin:
+
+		chown dtadmin /mapr/yarn-dt/user/dtadmin
+
+3.  Create a dtadmin user on all nodes:
+
+		clush -a 'groupadd -g 499 dtadmin'
+		clush -a 'useradd -g 499 -u 498 dtadmin'
+		clush -a 'echo "dtadmin" | passwd --stdin dtadmin'
+
+4.  Go to the DT UI (url from earlier), and start the wizard.
+
+5.  in the UI, specify this for 'dfs location':
+
+		/mapr/clustername/user/dtadmin/datatorrent
+
+
+
+>While it is possible to install and manage multiple Gateway instances on different nodes, we do not recommend using them concurrently at this time.   If this is being done for high availability purposes, synchronization of configuration files located in /etc/datatorrent  will have to be executed manually at this time.
+
+
+##DT demo UI
+
+Datatorrent also has a web interface for use specifically with the bundled demos.  It leverages nodeJS.  Here's how to install (all steps performed on the DT gateway node):
+
+	
+1.  Grab the nodeJS tar ball and unpack:
+
+		wget http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-x64.tar.gz
+		tar -xzf node-v0.10.28-linux-x64.tar.gz 
+
+2.  Go into the created directory:
+
+		cd node-v0.10.28-linux-x64
+
+3.  Copy the node binary somewhere in your PATH:
+
+		cp bin/node /usr/local/bin
+
+4.  Go to the data torrent demo's UI
+
+		cd /opt/datatorrent/releases/1.0.0/demos/ui
+	
+5.  Modify config.js (obviously change the GATEWAY_HOST accordingly, but pay special attention to the spelling/case for the appNames):
+
+		config.gateway.host = process.env.GATEWAY_HOST || 'yarn-demo0';
+		settings.mobile.appName = 'MobileDemo';
+		settings.twitter.appName = 'TwitterDemo';
+		settings.fraud.appName = 'FraudDetect';
+		
+	
+6.  You should now be able to fire up the demo UI:
+
+		node ./app.js
+	
+>(may want to run inside a 'screen' session)
+
 
 note: to be able to start apps as someone other than 'mapr' =>
 if you want to start application as other user. you can change
@@ -163,32 +230,11 @@ allowed.system.users=mapr
 obviously change this..
 
 
-While it is possible to install and manage multiple Gateway instances on different nodes, we do not recommend using them concurrently at this time.   If this is being done for high availability purposes, synchronization of configuration files located in /etc/datatorrent  will have to be executed manually at this time.
 
+##Running the mobile demo:
+All steps done on the gateway node:
 
-now, install the demo UI:
-
-	wget http://nodejs.org/dist/v0.10.28/node-v0.10.28-linux-x64.tar.gz
-	tar -xzf node-v0.10.28-linux-x64.tar.gz 
-	cd node-v0.10.28-linux-x64
-	cp bin/node /usr/local/bin
-	
-	cd /opt/datatorrent/releases/1.0.0/demos/ui
-	
-Modify config.js:
-
-	config.gateway.host = process.env.GATEWAY_HOST || 'yarn-demo0';
-	settings.mobile.appName = 'MobileDemo';
-	settings.twitter.appName = 'TwitterDemo';
-	settings.fraud.appName = 'FraudDetect';
-	
-	
-	node ./app.js
-	
-(may want to run inside a 'screen' session)
-
-Running the mobile demo:
-
+ 
 
 * su mapr
 * dtcli
