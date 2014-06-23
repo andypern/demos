@@ -122,6 +122,8 @@ object m7import {
 
 
 
+
+
     //not needed for this excercise.  split each line into fields, delimited by ,
     //val words = records.flatMap(_.split(","))
 
@@ -166,17 +168,7 @@ object m7import {
             table.put(tblPut)
             Files.append(resID + "," + dateTime + "," + hz + "," + disp + "," + flo + "," + sedPPM + "," + psi + "," + chlPPM + "\n", outputFile, Charset.defaultCharset())
 
-            val json = 
-              ("PumpID" -> resID) ~
-              ("date" -> date) ~
-              ("time" -> time) ~
-              ("HZ" -> hz) ~
-              ("Displacement" -> disp) ~
-              ("Flow" -> flo) ~
-              ("SedimentPPM" -> sedPPM) ~
-              ("PSI" -> psi) ~
-              ("ChlorinepPM" -> chlPPM)
-            println(pretty(render(json)))
+
           
           }
           /*now that each of the rows are in m7 , lets dump the entire RDD to disk.
@@ -200,6 +192,23 @@ object m7import {
 //EMPTY dstreams!  Probbaly should insert a check here..
    // records.saveAsTextFiles("/mapr/shark/CSV/")
 
+       //sliding window testing
+    val slidingWindow = records.window(Seconds(60, Seconds(10)))
+
+    //what happens when we spit this to the screen?
+    slidingwindow.print()
+
+            //   val json = 
+            //   ("PumpID" -> resID) ~
+            //   ("date" -> date) ~
+            //   ("time" -> time) ~
+            //   ("HZ" -> hz) ~
+            //   ("Displacement" -> disp) ~
+            //   ("Flow" -> flo) ~
+            //   ("SedimentPPM" -> sedPPM) ~
+            //   ("PSI" -> psi) ~
+            //   ("ChlorinepPM" -> chlPPM)
+            // println(pretty(render(json)))
 
     // print lines to console
     //records.print()
