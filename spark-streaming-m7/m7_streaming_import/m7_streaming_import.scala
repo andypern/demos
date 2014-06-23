@@ -194,6 +194,7 @@ object m7import {
 
        //sliding window testing, this makes a new dstream containing the last 60 seconds of data..every 15 seconds
     val slidingWindow = records.window(Seconds(60), Seconds(15))
+    println("another window")
 
         //basically, foreach rdd inside the Dstream, perform a 'collect' on the RDD, which creates an array, 
     // and run a foreach on the elements within the array.  Maybe there's a more 'sparky' way of doing this..so sue me.
