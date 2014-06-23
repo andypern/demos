@@ -76,7 +76,7 @@ object StreamingExamples extends Logging {
 object m7import {
   def main(args: Array[String]) {
     if (args.length < 6) {
-      System.err.println("Usage: m7import <master> <hostname> <port> <batchsecs> </path/to/tablename> </path/to/outputFile>\n" +
+      System.err.println("Usage: m7import <master> <hostname> <port> <batchsecs> </path/to/tablename> </path/to/outputFile> </path/to/d3.json>\n" +
         "In local mode, <master> should be 'local[n]' with n > 1")
       System.exit(1)
     }
@@ -84,12 +84,14 @@ object m7import {
   
     StreamingExamples.setStreamingLogLevels()
 
-     val Array(master, host, IntParam(port), IntParam(batchsecs), tablename, outputPath) = args
+     val Array(master, host, IntParam(port), IntParam(batchsecs), tablename, outputPath, d3Input) = args
 
      //time to write an output file..we should probably split it into multiples but for now we'll just stream to a single file.
 
     val outputFile = new File(outputPath)
-    if (outputFile.exists()) outputFile.delete()
+    if (outputFile.exists()) {
+      outputFile.delete()
+      } 
 
     //force spark to look for an open port to use for this context
     System.setProperty("spark.ui.port", "5050")
@@ -198,7 +200,12 @@ object m7import {
         //basically, foreach rdd inside the Dstream, perform a 'collect' on the RDD, which creates an array, 
     // and run a foreach on the elements within the array.  Maybe there's a more 'sparky' way of doing this..so sue me.
     slidingWindow.foreach(rdd => {
-      println("window RDD")
+      //this only works because there's only one RDD per dstream in this caseprintln("window RDD")
+      val d3File = new File(d3Input)
+      if (d3File.exists()) {
+        d3File.delete()
+      }
+
       val rddarray = rdd.collect
         if(rddarray.length > 0) {
           for(line <- rddarray) {
@@ -218,7 +225,7 @@ object m7import {
               ("SedimentPPM" -> sedPPM) ~
               ("PSI" -> psi) ~
               ("ChlorinepPM" -> chlPPM)
-            //println(pretty(render(json)))
+            Files.append(pretty(render(json)) + "\n", d3File, Charset.defaultCharset())
 
 
           

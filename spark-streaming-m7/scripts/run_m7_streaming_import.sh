@@ -83,10 +83,17 @@ if [ -e ${OUTFILE} ]
 	then
 	rm -f ${OUTFILE}
 fi
-
 ##create directory if need be
 
 mkdir -p /mapr/${CLUSTER}/CSV
+
+
+###blow away the JSON output file
+
+if [ -e ${D3_OUTPUT} ]
+	then
+	rm -f ${D3_OUTPUT}
+fi
 
 
 
@@ -150,4 +157,4 @@ CLASSPATH+=:/opt/mapr/lib/maprfs-1.0.3-mapr-3.0.3.jar
 
 #finally, execute the code
 
-${JAVA_BIN} -cp $CLASSPATH org.apache.spark.streaming.m7import.m7import ${SPARK_URL} ${MYHOST} ${PORT} ${BATCHSECS} ${TABLENAME} ${OUTFILE}
+${JAVA_BIN} -cp $CLASSPATH org.apache.spark.streaming.m7import.m7import ${SPARK_URL} ${MYHOST} ${PORT} ${BATCHSECS} ${TABLENAME} ${OUTFILE} ${D3_OUTPUT}
