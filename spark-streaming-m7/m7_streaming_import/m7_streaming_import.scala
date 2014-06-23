@@ -192,11 +192,42 @@ object m7import {
 //EMPTY dstreams!  Probbaly should insert a check here..
    // records.saveAsTextFiles("/mapr/shark/CSV/")
 
-       //sliding window testing
+       //sliding window testing, this makes a new dstream containing the last 60 seconds of data..every 15 seconds
     val slidingWindow = records.window(Seconds(60), Seconds(15))
 
+        //basically, foreach rdd inside the Dstream, perform a 'collect' on the RDD, which creates an array, 
+    // and run a foreach on the elements within the array.  Maybe there's a more 'sparky' way of doing this..so sue me.
+    slidingWindow.foreach(rdd => {
+      val rddarray = rdd.collect
+        if(rddarray.length > 0) {
+          for(line <- rddarray) {
+             //time to split this row into words, from scala-cookbook, the .trim removes leading/trailing
+             //spaces from the values.
+            val Array(resID, date, time, hz, disp, flo, sedPPM, psi, chlPPM) = line.split(",").map(_.trim)
+            //since tableau is lame about datefields, need to combine date+time
+            val dateTime = date + " " + time
+
+              val json = 
+              ("PumpID" -> resID) ~
+              ("date" -> date) ~
+              ("time" -> time) ~
+              ("HZ" -> hz) ~
+              ("Displacement" -> disp) ~
+              ("Flow" -> flo) ~
+              ("SedimentPPM" -> sedPPM) ~
+              ("PSI" -> psi) ~
+              ("ChlorinepPM" -> chlPPM)
+            println(pretty(render(json)))
+
+
+          
+          }
+        }
+    })
+
+
     //what happens when we spit this to the screen?
-    slidingWindow.print()
+    //slidingWindow.print()
 
             //   val json = 
             //   ("PumpID" -> resID) ~
