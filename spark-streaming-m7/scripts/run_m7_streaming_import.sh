@@ -129,9 +129,15 @@ for jar in `find $SCALA_HOME -name 'scala*.jar'`; do
 done
 
 #grab the json4s jars
-for jar in `find $SCALA_HOME/org.json4s -name '*.jar'`; do
+if [ -d ${DEMODIR}/m7_streaming_import/jars/cache/org.json4s ]
+	then
+	for jar in `find ${DEMODIR}/m7_streaming_import/jars/cache/org.json4s -name '*.jar'`; do
 	CLASSPATH+=:$jar
-done
+	done
+else
+	echo "you may need to recompile the app via sbt/sbt package...json4s jars not found"
+	exit 1
+fi
 
 
 #grab our special spray jar
