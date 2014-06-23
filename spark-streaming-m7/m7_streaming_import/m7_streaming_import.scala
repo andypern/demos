@@ -196,7 +196,7 @@ object m7import {
     val slidingWindow = records.window(Seconds(60, Seconds(10)))
 
     //what happens when we spit this to the screen?
-    slidingwindow.print()
+    slidingWindow.print()
 
             //   val json = 
             //   ("PumpID" -> resID) ~
