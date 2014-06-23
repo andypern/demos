@@ -193,7 +193,7 @@ object m7import {
    // records.saveAsTextFiles("/mapr/shark/CSV/")
 
        //sliding window testing
-    val slidingWindow = records.window(Seconds(60, Seconds(10)))
+    val slidingWindow = records.window(Seconds(60), Seconds(10))
 
     //what happens when we spit this to the screen?
     slidingWindow.print()
