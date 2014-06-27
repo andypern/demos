@@ -201,6 +201,7 @@ object m7import {
     // and run a foreach on the elements within the array.  Maybe there's a more 'sparky' way of doing this..so sue me.
     slidingWindow.foreach(rdd => {
       //this only works because there's only one RDD per dstream in this caseprintln("window RDD")
+      //note that this results in the file being removed prior to inserting data into it..which can result in the file being 'gone' for a short period
       val d3File = new File(d3Input)
       if (d3File.exists()) {
         d3File.delete()
@@ -234,20 +235,7 @@ object m7import {
     })
 
 
-    //what happens when we spit this to the screen?
-    //slidingWindow.print()
 
-            //   val json = 
-            //   ("PumpID" -> resID) ~
-            //   ("date" -> date) ~
-            //   ("time" -> time) ~
-            //   ("HZ" -> hz) ~
-            //   ("Displacement" -> disp) ~
-            //   ("Flow" -> flo) ~
-            //   ("SedimentPPM" -> sedPPM) ~
-            //   ("PSI" -> psi) ~
-            //   ("ChlorinepPM" -> chlPPM)
-            // println(pretty(render(json)))
 
     // print lines to console
     //records.print()
