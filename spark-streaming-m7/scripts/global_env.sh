@@ -6,16 +6,13 @@
 
 
 export CLUSTER=`cat /opt/mapr/conf/mapr-clusters.conf |awk {'print $1'}`
+export NODELIST=`clush -a 'hostname' | awk {'print $2'}`
 
 export MYHOST=`hostname`
 export SPARK_URL=spark://${MYHOST}:7077
-export PORT=9999 
 
-export BATCHSECS=3 #length of spark streaming batches/DSTREAMs
-export TABLENAME=/tables/sensortable 
 
-export OUTFILE=/mapr/${CLUSTER}/CSV/sensor.csv
-export D3_OUTPUT=/mapr/${CLUSTER}/window.json
+
 
 export BASEDIR=/mapr/${CLUSTER}/ingest
 export DEMODIR=/mapr/${CLUSTER}/demos/spark-streaming-m7
