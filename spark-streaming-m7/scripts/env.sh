@@ -6,9 +6,9 @@
 
 
 export CLUSTER=`cat /opt/mapr/conf/mapr-clusters.conf |awk {'print $1'}`
-export NODELIST=`clush -a 'hostname' | awk {'print $2'}`
+export NODELIST=`clush -a 'hostname -f' | awk {'print $2'}`
 
-export MYHOST=`hostname`
+export MYHOST=`hostname -f`
 export SPARK_URL=spark://${MYHOST}:7077
 export PORT=9999 
 export USERNAME="user1"
