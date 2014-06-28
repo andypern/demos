@@ -15,10 +15,14 @@ if [ -n "$1" ]
 	then CLASS=$1
 else
 	echo "you didn't specify a class!" >&2
+	echo "usage: spark_jobs.sh ClassName extra-args" >&2
+	echo "available classes: SparkPi JavaWordCount" >&2
+	echo "example: spark_jobs.sh JavaWordCount /mapr/clustername/username/data/input.txt" >&2
 	exit 1
 fi
 
 
 /opt/mapr/spark/spark-0.9.1/bin/run-example \
 org.apache.spark.examples.${CLASS} \
-spark://ip-10-230-4-141.us-west-2.compute.internal:7077
+${SPARK_URL} \
+$2

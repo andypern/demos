@@ -24,7 +24,7 @@ export SPARK_HOME=/opt/mapr/spark/spark-0.9.1
 export HADOOP_HOME=/opt/mapr/hadoop/hadoop-0.20.2
 export SPARK_LIBRARY_PATH=/usr/local/lib:/opt/mapr/lib:/opt/mapr/hadoop/hadoop-0.20.2/lib/native/Linux-amd64-64
 
-SPARK_CLASSPATH=$SPARK_CLASSPATH:/opt/mapr/lib/json-20080701.jar:/opt/mapr/hadoop/hadoop-0.20.2/conf:/opt/mapr/hadoop/hadoop-0.20.2/lib/hadoop-0.20.2-dev-core.jar:/opt/mapr/hadoop/hadoop-0.20.2/lib/commons-logging-1.0.4.jar:/opt/mapr/lib/libprotodefs.jar:/opt/mapr/lib/maprutil-0.1.jar:/opt/mapr/lib/baseutils-0.1.jar:/opt/mapr/hbase/hbase-0.94.17/conf/:/opt/mapr/hadoop/hadoop-0.20.2/lib/maprfs-1.0.3-mapr-3.0.3.jar:/opt/mapr/hadoop/hadoop-0.20.2/lib/zookeeper-3.3.6.jar:/opt/mapr/hadoop/hadoop-0.20.2/lib/mapr-hbase-1.0.3-mapr-3.0.3.jar:/opt/mapr/hbase/hbase-0.94.17/hbase-0.94.17-mapr-1403-SNAPSHOT.jar:
+SPARK_CLASSPATH=$SPARK_CLASSPATH:/opt/mapr/lib/json-20080701.jar:/opt/mapr/hadoop/hadoop-0.20.2/conf:/opt/mapr/hadoop/hadoop-0.20.2/lib/hadoop-0.20.2-dev-core.jar:/opt/mapr/hadoop/hadoop-0.20.2/lib/commons-logging-1.0.4.jar:/opt/mapr/lib/libprotodefs.jar:/opt/mapr/lib/maprutil-0.1.jar:/opt/mapr/lib/baseutils-0.1.jar:/opt/mapr/hbase/hbase-0.94.17/conf/:/opt/mapr/hadoop/hadoop-0.20.2/lib/maprfs-1.0.3-mapr-3.0.3.jar:/opt/mapr/hadoop/hadoop-0.20.2/lib/zookeeper-3.3.6.jar:/opt/mapr/hadoop/hadoop-0.20.2/lib/mapr-hbase-1.0.3-mapr-3.0.3.jar:/opt/mapr/hbase/hbase-0.94.17/hbase-0.94.17-mapr-1405-SNAPSHOT.jar:
 
 
 export SPARK_CLASSPATH
@@ -36,8 +36,8 @@ export SPARK_WORKER_DIR=$SPARK_HOME/tmp
 #export SPARK_DAEMON_JAVA_OPTS="-Dspark.deploy.recoveryMode=ZOOKEEPER  -Dspark.deploy.zookeeper.url=<zookeerper1:5181,zookeeper2:5181,..>"
 
 # MEMORY SETTINGS
-export SPARK_MEM=512m
+export SPARK_MEM=1g
 export SPARK_DAEMON_MEMORY=1g
 export SPARK_WORKER_MEMORY=16g
 
-export SPARK_MASTER_IP=maprdemo.local
+export SPARK_MASTER_IP=localhost
