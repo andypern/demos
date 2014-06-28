@@ -11,4 +11,8 @@ else
 	exit 1
 fi
 
-/opt/mapr/spark/spark-0.9.1/bin/run-example org.apache.spark.examples.WordCount spark://ip-10-230-4-141.us-west-2.compute.internal:7077
+CLASS=$1
+
+/opt/mapr/spark/spark-0.9.1/bin/run-example \
+org.apache.spark.examples.${CLASS} \
+spark://ip-10-230-4-141.us-west-2.compute.internal:7077
