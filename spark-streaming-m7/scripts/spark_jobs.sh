@@ -11,7 +11,13 @@ else
 	exit 1
 fi
 
-CLASS=$1
+if [ -n "$1" ]
+	then CLASS=$1
+else
+	echo "you didn't specify a class!" >&2
+	exit 1
+fi
+
 
 /opt/mapr/spark/spark-0.9.1/bin/run-example \
 org.apache.spark.examples.${CLASS} \
