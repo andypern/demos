@@ -5,24 +5,27 @@
 
 
 
+
+export PORT=9999 
+export USERNAME="user1"
+
+export BATCHSECS=3 #length of spark streaming batches/DSTREAMs
+export TABLENAME="sensortable"
+export TABLEPATH=${LABDIR}/tables/${TABLENAME}
+
+
 export CLUSTER=`cat /opt/mapr/conf/mapr-clusters.conf |awk {'print $1'}`
 export NODELIST=`clush -a 'hostname -f' | awk {'print $2'}`
 
 export MYHOST=`hostname -f`
 export SPARK_URL=spark://${MYHOST}:7077
-export PORT=9999 
-export USERNAME="user1"
-
-export BATCHSECS=3 #length of spark streaming batches/DSTREAMs
-export TABLENAME=/tables/${USERNAME}/sensortable 
 
 
+export LABDIR=/mapr/${CLUSTER}/user/${USERNAME}/spark
+export OUTFILE=${LABDIR}/output/output.csv
+export D3_OUTPUT=${LABDIR}/output/d3.out.json
 
-export LABDIR=/mapr/${CLUSTER}/user/${USERNAME}
-export OUTFILE=${LABDIR}/output.csv
-export D3_OUTPUT=${LABDIR}/d3.out.json
-
-export BASEDIR=${LABDIR}/ingest
+export BASEDIR=${LABDIR}/plumbing
 
 export JARFILE=${LABDIR}/m7_streaming_import/target/scala-2.10/m7import_2.10-0.1-SNAPSHOT.jar
 

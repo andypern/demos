@@ -1,13 +1,13 @@
 #!/bin/bash
 
-if [ -f ${DEMODIR}/scripts/env.sh ]
+if [ -f ${LABDIR}/scripts/env.sh ]
 	then
-	source ${DEMODIR}/scripts/env.sh
+	source ${LABDIR}/scripts/env.sh
 elif [ -f ./env.sh ]
 	then
 	source env.sh
 else
-	echo "env.sh not sourced, you need to chdir to /mapr/clustername/demos/spark-streaming-m7/scripts and run this from there."
+	echo "env.sh not sourced, you need to chdir to /mapr/clustername/user/username/spark/scripts and run this from there."
 	exit 1
 fi
 
@@ -17,7 +17,7 @@ fi
 #first, run drop_tables to make sure we don't have any stuff leftover
 
 echo "cleaning up tables that may already exist"
-sh ${DEMODIR}/scripts/drop_tables.sh
+sh ${LABDIR}/scripts/drop_tables.sh
 
 #first, create the table pointing to M7, but first blow it away and re-create a dummy one.
 
@@ -27,9 +27,9 @@ sh ${DEMODIR}/scripts/drop_tables.sh
 # 		rm -f  /mapr/${CLUSTER}/${TABLENAME}
 # fi
 
-mkdir -p /mapr/${CLUSTER}/tables
-maprcli table create -path ${TABLENAME}
-maprcli table cf create -path ${TABLENAME} -cfname cf1
+mkdir -p ${LABDIR}/tables
+maprcli table create -path ${TABLEPATH}
+maprcli table cf create -path ${TABLEPATH} -cfname cf1
 
 /usr/bin/hive -f ${DEMODIR}/scripts/create_ext_table.hql
 

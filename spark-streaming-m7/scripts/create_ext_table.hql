@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE sensor
+CREATE EXTERNAL TABLE USERNAME_sensor
         (key STRING, resID STRING, date STRING,
         hz FLOAT,
         disp FLOAT,
@@ -13,4 +13,4 @@ CREATE EXTERNAL TABLE sensor
         cf1:flo,cf1:sedPPM,cf1:psi,cf1:chlPPM"
         )
 
-TBLPROPERTIES("hbase.table.name" = "/tables/sensortable");
+TBLPROPERTIES("hbase.table.name" = "/mapr/CLUSTER/user/USERNAME/spark/tables/sensortable");

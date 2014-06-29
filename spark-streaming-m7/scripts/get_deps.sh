@@ -89,7 +89,9 @@ for USER in `seq 10`
 	do 
 	mkdir -p /mapr/${CLUSTER}/user/user${USER}/spark
 	cp -R ${DEMODIR}/* /mapr/${CLUSTER}/user/user${USER}/spark
+	##URGENT : NEED TO INSERT SOMETHIGN TO FIX UP HQL FILES!
 done
+
 
 
 # mkdir -p ${BASEDIR}

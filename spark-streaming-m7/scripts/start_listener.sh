@@ -5,14 +5,14 @@
 
 ##the env.sh sets our variables, but if that isn't working you can uncomment and manually set them below.
 
-if [ -f ${DEMODIR}/scripts/env.sh ]
+if [ -f ${LABDIR}/scripts/env.sh ]
 	then
-	source ${DEMODIR}/scripts/env.sh
+	source ${LABDIR}/scripts/env.sh
 elif [ -f ./env.sh ]
 	then
 	source env.sh
 else
-	echo "env.sh not sourced, you need to chdir to /mapr/clustername/demos/spark-streaming-m7/scripts and run this from there."
+	echo "env.sh not sourced, you need to chdir to /mapr/clustername/user/username/spark/scripts and run this from there."
 	exit 1
 fi
 
@@ -36,7 +36,7 @@ if [ -d /mapr/${CLUSTER} ]
 
 #add another check to kill if need be
 
-if lsof -i:9999
+if lsof -i:${PORT}
 	then
 	killall -9 nc
 fi

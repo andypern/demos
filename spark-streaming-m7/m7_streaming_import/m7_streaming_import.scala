@@ -13,9 +13,7 @@ This should allow the connection to stay open, and be able to shove whatever you
 */
 
 /*TODO:
-- decide how to chunk output files up..eg: every minute? hour? day? # of rows?
-- nice-to-have: figure out dstream 'windows' and spit something out to web/D3 somehow....
-- Take out any hardcoded paths.
+
 - When saving RDD to disk, may be useful to output with the 'dateTime' squashed field instead of the date,time fields (for tableau)
 - use KAFKA or another messaging system as the input (per Ted)
 */
@@ -53,7 +51,7 @@ import org.apache.log4j.{Level, Logger}
 
 
 
-/** Utility functions for Spark Streaming examples. */
+
 object StreamingExamples extends Logging {
 
   /** Set reasonable logging levels for streaming if the user has not configured log4j. */
@@ -75,8 +73,8 @@ object StreamingExamples extends Logging {
 
 object m7import {
   def main(args: Array[String]) {
-    if (args.length < 6) {
-      System.err.println("Usage: m7import <master> <hostname> <port> <batchsecs> </path/to/tablename> </path/to/outputFile> </path/to/d3.json>\n" +
+    if (args.length < 8) {
+      System.err.println("Usage: m7import <master> <hostname> <port> <USERNAME> <batchsecs> </path/to/tablename> </path/to/outputFile> </path/to/d3.json>\n" +
         "In local mode, <master> should be 'local[n]' with n > 1")
       System.exit(1)
     }
@@ -84,7 +82,8 @@ object m7import {
   
     StreamingExamples.setStreamingLogLevels()
 
-     val Array(master, host, IntParam(port), IntParam(batchsecs), tablename, outputPath, d3Input) = args
+     val Array(master, host, IntParam(port), username, IntParam(batchsecs), tablename, outputPath, d3Input) = args
+     val appName = "M7import" + "_" + username
 
      //time to write an output file..we should probably split it into multiples but for now we'll just stream to a single file.
 
@@ -93,12 +92,13 @@ object m7import {
       outputFile.delete()
       } 
 
-    //force spark to look for an open port to use for this context
+    //force spark to a specific port to use for this context
     System.setProperty("spark.ui.port", "5050")
     System.setProperty("spark.cores.max", "2")
+
     // Create the context with a X second batch size, where X is the arg you supplied as 'batchsecs'.
 
-    val ssc = new StreamingContext(master, "M7import", Seconds(batchsecs),
+    val ssc = new StreamingContext(master, appName, Seconds(batchsecs),
       System.getenv("SPARK_HOME"), StreamingContext.jarOfClass(this.getClass))
 
     //instantiate m7/hbase connection ahead of time.
@@ -107,6 +107,7 @@ object m7import {
     
     val admin = new HBaseAdmin(conf)
 
+    //This assumes you already have a table created.  In theory you could have it create a table, but we won't get into that now.
     if(!admin.isTableAvailable(tablename )) {
         println("Table doesn't exist..quitting")
         System.exit(1)
@@ -124,32 +125,23 @@ object m7import {
 
 
 
-
-
-    //not needed for this excercise.  split each line into fields, delimited by ,
-    //val words = records.flatMap(_.split(","))
-
-
-    //basically, foreach rdd inside the Dstream, perform a 'collect' on the RDD, which creates an array, 
-    // and run a foreach on the elements within the array.  Maybe there's a more 'sparky' way of doing this..so sue me.
+    /*basically, foreach rdd inside the Dstream, perform a 'collect' on the RDD, which creates an array, 
+    and run a foreach on the elements within the array.  Maybe there's a more 'sparky' way of doing this..
+    */
     records.foreach(rdd => {
       val rddarray = rdd.collect
         if(rddarray.length > 0) {
           var linecount = 0
           for(line <- rddarray) {
             linecount += 1
-             //time to split this row into words, from scala-cookbook, the .trim removes leading/trailing
-             //spaces from the values.
+             //split this row into words, from scala-cookbook, the .trim removes leading/trailing spaces from the values.
+          
             val Array(resID, date, time, hz, disp, flo, sedPPM, psi, chlPPM) = line.split(",").map(_.trim)
             //since tableau is lame about datefields, need to combine date+time
             val dateTime = date + " " + time
-            // Time to create a compositekey
+            // Create a compositekey for M7 insertion
             val compositeKey = resID + "_" + dateTime
-
-            //now we need some code to shove into m7..
-
-            //println(s"Writing this to m7: $resID,$date,$time,$hz,$disp,$flo,$sedPPM,$psi,$chlPPM")
-            
+   
             //OLD: generate a random number to use for a key
             //val myKey=Random.nextInt(Integer.MAX_VALUE)
 
@@ -166,15 +158,15 @@ object m7import {
             tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("psi"),Bytes.toBytes(psi))
             tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("chlPPM"),Bytes.toBytes(chlPPM))
 
-    
+            //finally, put the row
             table.put(tblPut)
+            //append the row to a CSV file
             Files.append(resID + "," + dateTime + "," + hz + "," + disp + "," + flo + "," + sedPPM + "," + psi + "," + chlPPM + "\n", outputFile, Charset.defaultCharset())
 
 
           
           }
-          /*now that each of the rows are in m7 , lets dump the entire RDD to disk.
-          NOTE: we're not writing this with our 'datetime' column...
+          /*Below example dumps the entire RDD to disk.
           note: this is sort of annoying..it saves to a new folder with a 'part-0000' file..just like a MR job
           */
           
@@ -183,39 +175,37 @@ object m7import {
           */
           println("dumped " + linecount + " rows to table " + tablename + " and wrote them to " + outputPath)
 
-          
-         
-          //needless println
-          //println("record array length: " + rddarray.length + " first row: " + rddarray(0))
         }
     })
 
-//lets also try and save the whole dstream.  this is even uglier than saving each RDD..because it even saves 
-//EMPTY dstreams!  Probbaly should insert a check here..
-   // records.saveAsTextFiles("/mapr/shark/CSV/")
-
-       //sliding window testing, this makes a new dstream containing the last 60 seconds of data..every 15 seconds
+/* This is how you save Dstreams out to a file, (one file per Dstream!) note though that it can even save 
+EMPTY dstreams!  If you want to use it its best to insert some sort of check:
+    records.saveAsTextFiles("/mapr/shark/CSV/")
+*/
+       //sliding window  this makes a new dstream containing the last 60 seconds of data..every 15 seconds
     val slidingWindow = records.window(Seconds(60), Seconds(15))
 
-        //basically, foreach rdd inside the Dstream, perform a 'collect' on the RDD, which creates an array, 
-    // and run a foreach on the elements within the array.  Maybe there's a more 'sparky' way of doing this..so sue me.
-    slidingWindow.foreach(rdd => {
-      //this only works because there's only one RDD per dstream in this caseprintln("window RDD")
-      //note that this results in the file being removed prior to inserting data into it..which can result in the file being 'gone' for a short period
+   /*
+    Note that this only works because there's only one RDD per dstream in this case.
+    Caveat: this results in the file being removed prior to inserting data into it..which can result in the file being 'gone' for a short period
+      */
       val d3File = new File(d3Input)
       if (d3File.exists()) {
         d3File.delete()
       }
-
+         /* basically, foreach rdd inside the Dstream, perform a 'collect' on the RDD, which creates an array, 
+    and run a foreach on the elements within the array. There's probably a more elegant way of doing this.
+        */
       val rddarray = rdd.collect
         if(rddarray.length > 0) {
           for(line <- rddarray) {
-             //time to split this row into words, from scala-cookbook, the .trim removes leading/trailing
-             //spaces from the values.
+             /*time to split this row into words, from scala-cookbook, the .trim removes leading/trailing
+             spaces from the values.
+            */
             val Array(resID, date, time, hz, disp, flo, sedPPM, psi, chlPPM) = line.split(",").map(_.trim)
             //since tableau is lame about datefields, need to combine date+time
             val dateTime = date + " " + time
-
+            //build a json blob
               val json = 
               ("PumpID" -> resID) ~
               ("date" -> date) ~
@@ -225,7 +215,8 @@ object m7import {
               ("Flow" -> flo) ~
               ("SedimentPPM" -> sedPPM) ~
               ("PSI" -> psi) ~
-              ("ChlorinepPM" -> chlPPM)
+              ("ChlorinepPM" -> chlPPM)\
+              //append current record's JSON blob to output file.
             Files.append(pretty(render(json)) + "\n", d3File, Charset.defaultCharset())
 
 
