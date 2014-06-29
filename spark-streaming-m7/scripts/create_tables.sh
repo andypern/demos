@@ -31,18 +31,18 @@ mkdir -p ${LABDIR}/tables
 maprcli table create -path ${TABLEPATH}
 maprcli table cf create -path ${TABLEPATH} -cfname cf1
 
-/usr/bin/hive -f ${DEMODIR}/scripts/create_ext_table.hql
+/usr/bin/hive -f ${LABDIR}/scripts/create_ext_table.hql
 
 #next, create the table used for pump_vendor info:
 
-/usr/bin/hive -f ${DEMODIR}/scripts/create_pump_table.hql
+/usr/bin/hive -f ${LABDIR}/scripts/create_pump_table.hql
 
 # create the maintenance table
-/usr/bin/hive -f ${DEMODIR}/scripts/create_maint_table.hql
+/usr/bin/hive -f ${LABDIR}/scripts/create_maint_table.hql
 
 # create a view tying 2 of these tables together.
 
-/usr/bin/hive -f ${DEMODIR}/scripts/create_join_view.hql
+/usr/bin/hive -f ${LABDIR}/scripts/create_join_view.hql
 #kickoff sharkserver2, but kill it if its running first
 
 #only needed for now..
