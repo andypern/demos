@@ -90,6 +90,10 @@ for USER in `seq 10`
 	mkdir -p /mapr/${CLUSTER}/user/user${USER}/spark
 	cp -R ${DEMODIR}/* /mapr/${CLUSTER}/user/user${USER}/spark
 	##URGENT : NEED TO INSERT SOMETHIGN TO FIX UP HQL FILES!
+	for FILE in `ls /mapr/${CLUSTER}/user/user${USER}/spark/scripts|grep hql`
+		do sed -i 's/USERNAME/user1/g' $FILE
+		sed -i 's/CLUSTER/sko1/g' $FILE
+	done
 
 done
 
