@@ -1,14 +1,14 @@
 #!/bin/bash
 
 
-if [ -f ${DEMODIR}/scripts/env.sh ]
+if [ -f ${DEMODIR}/scripts/global_env.sh ]
 	then
-	source ${DEMODIR}/scripts/env.sh
-elif [ -f ./env.sh ]
+	source ${DEMODIR}/scripts/global_env.sh
+elif [ -f ./global_env.sh ]
 	then
-	source env.sh
+	source global_env.sh
 else
-	echo "env.sh not sourced, you need to chdir to /mapr/clustername/demos/spark-streaming-m7/scripts and run this from there."
+	echo "global_env.sh not sourced, you need to chdir to /mapr/clustername/demos/spark-streaming-m7/scripts and run this from there."
 	exit 1
 fi
 
@@ -90,6 +90,7 @@ for USER in `seq 10`
 	mkdir -p /mapr/${CLUSTER}/user/user${USER}/spark
 	cp -R ${DEMODIR}/* /mapr/${CLUSTER}/user/user${USER}/spark
 	##URGENT : NEED TO INSERT SOMETHIGN TO FIX UP HQL FILES!
+
 done
 
 
