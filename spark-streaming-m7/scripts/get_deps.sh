@@ -59,10 +59,21 @@ sleep 10
 
  # maprcli node services -name hs2 -action stop -nodes maprdemo
 
+#fix some configs
+sed -i 's/REPLACEME/${MYHOST}' ${DEMODIR}/conf/spark-env.sh
+
+sed -i 's/REPLACEME/${SPARK_URL}' ${DEMODIR}/conf/shark-env.sh
 
 cp -f ${DEMODIR}/conf/hive-site.xml /opt/mapr/hive/hive-0.13/conf/hive-site.xml
 cp -f ${DEMODIR}/conf/shark-env.sh /opt/mapr/shark/shark-0.9.0/conf/shark-env.sh
+
+clush -a -c /opt/mapr/shark/shark-0.9.0/conf/shark-env.sh
+
+
+
 cp -f ${DEMODIR}/conf/spark-env.sh /opt/mapr/spark/spark-0.9.1/conf/spark-env.sh
+clush -a -c /opt/mapr/shark/shark-0.9.1/conf/spark-env.sh
+
 cp -f ${DEMODIR}/conf/run /opt/mapr/shark/shark-0.9.0/run
 
 #clean up old cruft

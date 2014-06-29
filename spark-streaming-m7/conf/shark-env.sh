@@ -46,7 +46,7 @@ export SHARK_MASTER_MEM=1g
 SPARK_JAVA_OPTS=" -Dspark.local.dir=/tmp "
 SPARK_JAVA_OPTS+="-Dspark.kryoserializer.buffer.mb=10 "
 SPARK_JAVA_OPTS+="-verbose:gc -XX:-PrintGCDetails -XX:+PrintGCTimeStamps "
-SPARK_JAVA_OPTS+="-Dspark.cores.max=1"
+SPARK_JAVA_OPTS+="-Dspark.cores.max=2"
 export SPARK_JAVA_OPTS
 
 # (Optional) Tachyon Related Configuration
@@ -58,9 +58,9 @@ export HADOOP_HOME=/opt/mapr/hadoop/hadoop-0.20.2
 #export MASTER=SET MASTER URL(eg: spark://master-hostname:7077)
 export SPARK_HOME=/opt/mapr/spark/spark-0.9.1
 #export HIVE_CONF_DIR=
-export HIVE_CONF_DIR=/opt/mapr/hive/hive-0.12/conf
+export HIVE_CONF_DIR=/opt/mapr/hive/hive-0.13/conf
 export SCALA_HOME=/usr/share/java
-export MASTER=spark://maprdemo.local:7077
+export MASTER=REPLACEME
 
 source $SPARK_HOME/conf/spark-env.sh
 
