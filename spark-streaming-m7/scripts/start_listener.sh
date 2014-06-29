@@ -10,7 +10,7 @@ if [ -f ${LABDIR}/scripts/env.sh ]
 	source ${LABDIR}/scripts/env.sh
 elif [ -f ./env.sh ]
 	then
-	source env.sh
+	source ./env.sh
 else
 	echo "env.sh not sourced, you need to chdir to /mapr/clustername/user/username/spark/scripts and run this from there."
 	exit 1

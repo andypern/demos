@@ -6,7 +6,7 @@ if [ -f ${DEMODIR}/scripts/global_env.sh ]
 	source ${DEMODIR}/scripts/global_env.sh
 elif [ -f ./global_env.sh ]
 	then
-	source global_env.sh
+	source ./global_env.sh
 else
 	echo "global_env.sh not sourced, you need to chdir to /mapr/clustername/demos/spark-streaming-m7/scripts and run this from there."
 	exit 1
