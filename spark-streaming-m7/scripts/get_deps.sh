@@ -46,6 +46,7 @@ yum install -y mapr-impala-statestore mapr-impala-catalog
 #populate the slaves file
 
 echo ${NODELIST} > /opt/mapr/spark/spark-0.9.1/conf/slaves
+clush -a -c /opt/mapr/spark/spark-0.9.1/conf/slaves
 
 
 clush -a "/opt/mapr/server/configure.sh -R"
@@ -63,6 +64,8 @@ sleep 10
 sed -i 's/REPLACEME/${MYHOST}' ${DEMODIR}/conf/spark-env.sh
 
 sed -i 's/REPLACEME/${SPARK_URL}' ${DEMODIR}/conf/shark-env.sh
+
+cp /opt/mapr/hive/hive-0.13/conf/hive-site.xml /opt/mapr/hive/hive-0.13/conf/hive-site.xml.bak
 
 cp -f ${DEMODIR}/conf/hive-site.xml /opt/mapr/hive/hive-0.13/conf/hive-site.xml
 cp -f ${DEMODIR}/conf/shark-env.sh /opt/mapr/shark/shark-0.9.0/conf/shark-env.sh
