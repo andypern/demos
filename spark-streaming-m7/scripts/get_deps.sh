@@ -32,16 +32,20 @@ if ! rpm -qa | grep scala
 	clush -a "rm -f /tmp/scala-2.10.3.rpm"
 fi
 
-clush -a "yum install -y lsof"
+clush -a "yum install -y lsof telnet"
 clush -a "yum install -y vim"
+
+#create local volumes on all nodes for spark to use for tmp
+
+clush -a 'maprcli volume create -name mapr.`cat /opt/mapr/hostname`.local.sparktmp -path /var/mapr/local/`cat /opt/mapr/hostname`/sparktmp -replication 1 -localvolumehost `cat /opt/mapr/hostname` -localvolumeport 5660'
 
 yum install -y mapr-spark-master
 clush -a "yum install -y mapr-spark"
 
 #for now, grab impala too
-clush -a "yum install -y mapr-impala mapr-impala-server"
+#clush -a "yum install -y mapr-impala mapr-impala-server"
 
-yum install -y mapr-impala-statestore mapr-impala-catalog
+#yum install -y mapr-impala-statestore mapr-impala-catalog
 
 #populate the slaves file
 

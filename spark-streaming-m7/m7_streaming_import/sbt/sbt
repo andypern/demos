@@ -2,5 +2,5 @@
 
 export SPARK_JAVA_OPTS="-XX:+UseConcMarkSweepGC -Dspark.cleaner.delay=100"
 export SPARK_MEM=2000m
-java -Dspark.cleaner.delay=100 -Xmx2000m -Dsbt.ivy.home=$(dirname $0)/../jars -Divy.home=$(dirname $0)../jars -jar `dirname $0`/sbt-launch-*.jar "$@"
+java -Dspark.cleaner.delay=100 -Xmx2000m -Divy.home=$(dirname $0)../jars -jar `dirname $0`/sbt-launch-*.jar "$@"
 #java -Dspark.cleaner.delay=100 -Xmx2000m -jar $(dirname $0)/sbt-launch-*.jar "$@"

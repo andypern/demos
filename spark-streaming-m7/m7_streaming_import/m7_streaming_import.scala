@@ -189,41 +189,45 @@ EMPTY dstreams!  If you want to use it its best to insert some sort of check:
     Note that this only works because there's only one RDD per dstream in this case.
     Caveat: this results in the file being removed prior to inserting data into it..which can result in the file being 'gone' for a short period
       */
-      val d3File = new File(d3Input)
-      if (d3File.exists()) {
-        d3File.delete()
-      }
-         /* basically, foreach rdd inside the Dstream, perform a 'collect' on the RDD, which creates an array, 
-    and run a foreach on the elements within the array. There's probably a more elegant way of doing this.
-        */
-      val rddarray = rdd.collect
-        if(rddarray.length > 0) {
-          for(line <- rddarray) {
-             /*time to split this row into words, from scala-cookbook, the .trim removes leading/trailing
-             spaces from the values.
-            */
-            val Array(resID, date, time, hz, disp, flo, sedPPM, psi, chlPPM) = line.split(",").map(_.trim)
-            //since tableau is lame about datefields, need to combine date+time
-            val dateTime = date + " " + time
-            //build a json blob
-              val json = 
-              ("PumpID" -> resID) ~
-              ("date" -> date) ~
-              ("time" -> time) ~
-              ("HZ" -> hz) ~
-              ("Displacement" -> disp) ~
-              ("Flow" -> flo) ~
-              ("SedimentPPM" -> sedPPM) ~
-              ("PSI" -> psi) ~
-              ("ChlorinepPM" -> chlPPM)\
-              //append current record's JSON blob to output file.
-            Files.append(pretty(render(json)) + "\n", d3File, Charset.defaultCharset())
+      slidingWindow.foreach(rdd => {
+        val d3File = new File(d3Input)
+        if (d3File.exists()) {
+          d3File.delete()
+        }
+           /* basically, foreach rdd inside the Dstream, perform a 'collect' on the RDD, which creates an array, 
+      and run a foreach on the elements within the array. There's probably a more elegant way of doing this.
+          */
+
+        val rddarray = rdd.collect
+          if(rddarray.length > 0) {
+            for(line <- rddarray) {
+               /*time to split this row into words, from scala-cookbook, the .trim removes leading/trailing
+               spaces from the values.
+              */
+              val Array(resID, date, time, hz, disp, flo, sedPPM, psi, chlPPM) = line.split(",").map(_.trim)
+              //since tableau is lame about datefields, need to combine date+time
+              val dateTime = date + " " + time
+              //build a json blob
+                val json = 
+                ("PumpID" -> resID) ~
+                ("date" -> date) ~
+                ("time" -> time) ~
+                ("HZ" -> hz) ~
+                ("Displacement" -> disp) ~
+                ("Flow" -> flo) ~
+                ("SedimentPPM" -> sedPPM) ~
+                ("PSI" -> psi) ~
+                ("ChlorinepPM" -> chlPPM)
+                //append current record's JSON blob to output file.
+              Files.append(pretty(render(json)) + "\n", d3File, Charset.defaultCharset())
 
 
           
           }
         }
-    })
+      })
+    
+
 
 
 

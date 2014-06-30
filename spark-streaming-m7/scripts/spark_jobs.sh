@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -f $LABDIR/spark/scripts/env.sh ]
+if [ -f $LABDIR/scripts/env.sh ]
 	then
-	source ${LABDIR}/spark/scripts/env.sh
+	source ${LABDIR}/scripts/env.sh
 elif [ -f ./env.sh ]
 	then
 	source ./env.sh
@@ -23,6 +23,7 @@ fi
 
 
 /opt/mapr/spark/spark-0.9.1/bin/run-example \
+-Dspark.cores.max=4 \
 org.apache.spark.examples.${CLASS} \
 ${SPARK_URL} \
 $2 > ${LABDIR}/output/job.output.txt
