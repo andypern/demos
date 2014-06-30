@@ -6,8 +6,8 @@
 
 
 
-export PORT=9999 
-export USERNAME="user1"
+export PORT=REPLACEPORT 
+export USERNAME="REPLACEUSER"
 
 export BATCHSECS=3 #length of spark streaming batches/DSTREAMs
 export TABLENAME="sensortable"

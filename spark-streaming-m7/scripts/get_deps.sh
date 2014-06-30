@@ -61,9 +61,10 @@ sleep 10
  # maprcli node services -name hs2 -action stop -nodes maprdemo
 
 #fix some configs
-sed -i 's/REPLACEME/${MYHOST}/' ${DEMODIR}/conf/spark-env.sh
+sed -i 's/REPLACEME/'${MYHOST}'/' ${DEMODIR}/conf/spark-env.sh
 
-sed -i 's/REPLACEME/${SPARK_URL}/' ${DEMODIR}/conf/shark-env.sh
+sed -i 's/REPLACEME/'${SPARK_URL}'/' ${DEMODIR}/conf/shark-env.sh
+
 
 cp /opt/mapr/hive/hive-0.13/conf/hive-site.xml /opt/mapr/hive/hive-0.13/conf/hive-site.xml.bak
 
@@ -99,15 +100,19 @@ fi
 
 #user dirs
 
-for USER in `seq 10`
+for USER in `seq 9`
 	do 
 	mkdir -p /mapr/${CLUSTER}/user/user${USER}/spark
 	cp -R ${DEMODIR}/* /mapr/${CLUSTER}/user/user${USER}/spark
-	##URGENT : NEED TO INSERT SOMETHIGN TO FIX UP HQL FILES!
+	#FIX UP HQL FILES
 	for FILE in `ls /mapr/${CLUSTER}/user/user${USER}/spark/scripts|grep hql`
-		do sed -i 's/USERNAME/user1/g' $FILE
-		sed -i 's/CLUSTER/sko1/g' $FILE
+		do sed -i 's/USERNAME/user'${USER}'/g' $FILE
+		sed -i 's/CLUSTER/'${CLUSTER}'/g' $FILE
 	done
+	#Fix up env.sh
+	sed -i 's/REPLACEUSER/user'${USER}'/' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/env.sh
+	sed -i 's/REPLACEPORT/999'${USER}'/' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/env.sh
+
 
 done
 

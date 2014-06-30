@@ -15,7 +15,7 @@ fi
 
 #if need be , blow away all tables + views
 
-hive -e "drop table ${USERNAME}_sensor;drop table ${USERNAME}_pump_info; drop table ${USERNAME}_maint_table;"
+hive -e "drop table ${USERNAME}_SPARK_sensor;drop table ${USERNAME}_SPARK_pump_info; drop table ${USERNAME}_SPARK_maint_table;"
 
 
 echo "to re-create tables, run ${LABDIR}/scripts/create_tables.sh"

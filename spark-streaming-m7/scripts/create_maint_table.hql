@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE USERNAME_maint_table
+CREATE EXTERNAL TABLE USERNAME_SPARK_maint_table
 
 (resourceid STRING, eventDate STRING,
 technician STRING, description STRING)

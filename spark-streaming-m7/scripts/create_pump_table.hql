@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE USERNAME_pump_info
+CREATE EXTERNAL TABLE USERNAME_SPARK_pump_info
 
 (resourceid STRING, type STRING, purchasedate STRING,
 dateinservice STRING, vendor STRING, longitude FLOAT, latitude FLOAT)

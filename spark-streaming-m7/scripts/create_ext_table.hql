@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE USERNAME_sensor
+CREATE EXTERNAL TABLE USERNAME_SPARK_sensor
         (key STRING, resID STRING, date STRING,
         hz FLOAT,
         disp FLOAT,
