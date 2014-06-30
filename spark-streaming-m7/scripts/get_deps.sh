@@ -106,8 +106,8 @@ for USER in `seq 9`
 	cp -R ${DEMODIR}/* /mapr/${CLUSTER}/user/user${USER}/spark
 	#FIX UP HQL FILES
 	
-	sed -i 's/USERNAME/user'${USER}'/g' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/*.hql
-	sed -i 's/CLUSTER/'${CLUSTER}'/g' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/*.hql
+	sed -i ".bak" 's/USERNAME/user'${USER}'/g' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/*.hql
+	sed -i ".bak" 's/CLUSTER/'${CLUSTER}'/g' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/*.hql
 	
 	#Fix up env.sh
 	
