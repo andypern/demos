@@ -63,7 +63,7 @@ sleep 10
 #fix some configs
 sed -i 's/REPLACEME/'${MYHOST}'/' ${DEMODIR}/conf/spark-env.sh
 
-sed -i 's/REPLACEME/'"${SPARK_URL}"'/' ${DEMODIR}/conf/shark-env.sh
+sed -i 's/REPLACEME/'${MYHOST}'/' ${DEMODIR}/conf/shark-env.sh
 
 
 cp /opt/mapr/hive/hive-0.13/conf/hive-site.xml /opt/mapr/hive/hive-0.13/conf/hive-site.xml.bak
@@ -105,10 +105,10 @@ for USER in `seq 9`
 	mkdir -p /mapr/${CLUSTER}/user/user${USER}/spark
 	cp -R ${DEMODIR}/* /mapr/${CLUSTER}/user/user${USER}/spark
 	#FIX UP HQL FILES
-	for FILE in `ls /mapr/${CLUSTER}/user/user${USER}/spark/scripts|grep hql`
-		do sed -i 's/USERNAME/user'${USER}'/g' $FILE
-		sed -i 's/CLUSTER/'${CLUSTER}'/g' $FILE
-	done
+	
+	sed -i 's/USERNAME/user'${USER}'/g' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/*.hql
+	sed -i 's/CLUSTER/'${CLUSTER}'/g' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/*.hql
+	
 	#Fix up env.sh
 	sed -i 's/REPLACEUSER/user'${USER}'/' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/env.sh
 	sed -i 's/REPLACEPORT/999'${USER}'/' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/env.sh

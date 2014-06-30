@@ -60,7 +60,7 @@ export SPARK_HOME=/opt/mapr/spark/spark-0.9.1
 #export HIVE_CONF_DIR=
 export HIVE_CONF_DIR=/opt/mapr/hive/hive-0.13/conf
 export SCALA_HOME=/usr/share/java
-export MASTER=REPLACEME
+export MASTER=spark://REPLACEME:7077
 
 source $SPARK_HOME/conf/spark-env.sh
 
