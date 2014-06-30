@@ -10,8 +10,7 @@ export PORT=REPLACEPORT
 export USERNAME="REPLACEUSER"
 
 export BATCHSECS=3 #length of spark streaming batches/DSTREAMs
-export TABLENAME="sensortable"
-export TABLEPATH=${LABDIR}/tables/${TABLENAME}
+
 
 
 export CLUSTER=`cat /opt/mapr/conf/mapr-clusters.conf |awk {'print $1'}`
@@ -22,6 +21,10 @@ export SPARK_URL=spark://REPLACEURL:7077
 
 
 export LABDIR=/mapr/${CLUSTER}/user/${USERNAME}/spark
+
+export TABLENAME="sensortable"
+export TABLEPATH=${LABDIR}/tables/${TABLENAME}
+
 export OUTFILE=${LABDIR}/output/output.csv
 export D3_OUTPUT=${LABDIR}/output/d3.out.json
 
