@@ -25,4 +25,4 @@ fi
 /opt/mapr/spark/spark-0.9.1/bin/run-example \
 org.apache.spark.examples.${CLASS} \
 ${SPARK_URL} \
-$2 > ${LABDIR}/spark/output/job.output.txt
+$2 > ${LABDIR}/output/job.output.txt
