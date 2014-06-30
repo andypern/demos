@@ -101,7 +101,7 @@ fi
 #user dirs
 
 for USER in `seq 9`
-	do 
+	do echo "user${USER}"
 	mkdir -p /mapr/${CLUSTER}/user/user${USER}/spark
 	cp -R ${DEMODIR}/* /mapr/${CLUSTER}/user/user${USER}/spark
 	#FIX UP HQL FILES
