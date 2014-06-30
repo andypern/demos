@@ -63,7 +63,7 @@ sleep 10
 #fix some configs
 sed -i 's/REPLACEME/'${MYHOST}'/' ${DEMODIR}/conf/spark-env.sh
 
-sed -i 's/REPLACEME/'${SPARK_URL}'/' ${DEMODIR}/conf/shark-env.sh
+sed -i 's/REPLACEME/'"${SPARK_URL}"'/' ${DEMODIR}/conf/shark-env.sh
 
 
 cp /opt/mapr/hive/hive-0.13/conf/hive-site.xml /opt/mapr/hive/hive-0.13/conf/hive-site.xml.bak
