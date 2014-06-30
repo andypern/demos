@@ -110,6 +110,8 @@ for USER in `seq 9`
 	sed -i 's/CLUSTER/'${CLUSTER}'/g' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/*.hql
 	
 	#Fix up env.sh
+	
+	sed -i 's/REPLACEURL/'${MYHOST}'/' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/env.sh
 	sed -i 's/REPLACEUSER/user'${USER}'/' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/env.sh
 	sed -i 's/REPLACEPORT/999'${USER}'/' /mapr/${CLUSTER}/user/user${USER}/spark/scripts/env.sh
 
