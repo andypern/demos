@@ -102,6 +102,13 @@ if [ -d ${BASEDIR} ]
 	rm -rf ${BASEDIR}
 fi
 
+#prebuild the package to grab all the dep's, then copy into place
+cd ${DEMODIR}/m7_streaming_import
+
+sbt/sbt package  
+
+
+
 #user dirs
 
 for USER in `seq 9`
@@ -128,8 +135,5 @@ done
 
 # cp ${DEMODIR}/data/* ${BASEDIR}
 
-# cd ${DEMODIR}/m7_streaming_import
-
-# sbt/sbt package  
 
 # echo "all done prepping environment"
