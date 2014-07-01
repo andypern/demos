@@ -110,7 +110,7 @@ sbt/sbt package
 #set SHARK_HOST by grabbing the last line out of /etc/hosts
 
 SHARK_HOST=`tail -n 1 /etc/hosts | awk {'print $2'}`
-sed -i 's/REPLACESHARKHOST/${SHARK_HOST}/' ${DEMODIR}/scripts/env.sh
+sed -i 's/REPLACESHARKHOST/'${SHARK_HOST}'/' ${DEMODIR}/scripts/env.sh
 
 #user dirs
 
