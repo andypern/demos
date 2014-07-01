@@ -8,6 +8,7 @@
 
 export PORT=REPLACEPORT 
 export USERNAME="REPLACEUSER"
+export SHARK_HOST=REPLACESHARKHOST
 
 export BATCHSECS=3 #length of spark streaming batches/DSTREAMs
 
@@ -35,7 +36,7 @@ export JARFILE=${LABDIR}/m7_streaming_import/target/scala-2.10/m7import_2.10-0.1
 export SOURCE_FILE=${LABDIR}/data/SensorDataV5.csv
 
 export JAVA_BIN=`which java`
-export SLEEPSECS=.25 #sleep secs for data generator to pause between sending
+export SLEEPSECS=.1 #sleep secs for data generator to pause between sending
 
 
 #update path

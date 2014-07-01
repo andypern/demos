@@ -3,7 +3,7 @@ This is a work in progress...
 
 ##TODO
 
-
+* Modify this to match the proper branch (julyskolab)
 * add some screenshots to this doc
 * fix selinux..it keeps getting reset on reboot on the sandbox., maybe: modify /etc/selinux/config to contain "SELINUX=disabled"  (need sed line)
 * ~~simplify the procedure (put more logic into the shell scripts)~~

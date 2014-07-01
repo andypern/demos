@@ -54,25 +54,25 @@ fi
 
 
 
-if ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}
-	then
-	OLD_SHARK_PID=`ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}`
-	kill -9 ${OLD_SHARK_PID}
-fi
+# if ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}
+# 	then
+# 	OLD_SHARK_PID=`ps auxw|grep SharkServer2|grep -v grep|awk {'print $2'}`
+# 	kill -9 ${OLD_SHARK_PID}
+# fi
 
-${SHARK_BIN} --service sharkserver2 &
-SS2_PID=$!
-echo ${SS2_PID} > ${BASEDIR}/sharkserver2.pid
-disown
+# ${SHARK_BIN} --service sharkserver2 &
+# SS2_PID=$!
+# echo ${SS2_PID} > ${BASEDIR}/sharkserver2.pid
+# disown
 
 #wait 15 seconds to let sharkserver2 get running
-sleep 15
+#sleep 15
 
 #verify we can see tables via JDBC+sharkserver2
 
 echo "showing tables via beeline/jdbc + sharkserver2"
 
-${SHARK_BIN} --service beeline -u jdbc:hive2://${MYHOST}:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver -e "show tables;"
+${SHARK_BIN} --service beeline -u jdbc:hive2://${SHARK_HOST}:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver -e "show tables;"
 
 echo "if you saw 3 or more tables..all is well."
 

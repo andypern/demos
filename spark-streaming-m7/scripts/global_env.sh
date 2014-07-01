@@ -5,7 +5,7 @@
 
 
 
-export CLUSTER=`cat /opt/mapr/conf/mapr-clusters.conf |awk {'print $1'}`
+export CLUSTER=`head -n 1 /opt/mapr/conf/mapr-clusters.conf |awk {'print $1'}`
 export NODELIST=`clush -a 'hostname -f' | awk {'print $2'}`
 
 export MYHOST=`hostname -f`
@@ -26,17 +26,17 @@ export SLEEPSECS=.25 #sleep secs for data generator to pause between sending
 #update path
 export SHARK_BIN=/opt/mapr/shark/shark-0.9.0/bin/shark
 #aliases
-alias shark-beeline='${SHARK_BIN} --service beeline -u jdbc:hive2://localhost:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver'
+# alias shark-beeline='${SHARK_BIN} --service beeline -u jdbc:hive2://localhost:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver'
 
-alias step-1_start_listener='sh ${DEMODIR}/scripts/start_listener.sh'
-alias step-2_start_streaming='sh ${DEMODIR}/scripts/run_m7_streaming_import.sh'
-alias step-3_push_data='sh ${DEMODIR}/scripts/push_data.sh'
-alias step-4_table_scan='echo "scan '\''/tables/sensortable'\'', {LIMIT => 3}" | hbase shell'
-alias step-5_shark_beeline='${SHARK_BIN} --service beeline -u jdbc:hive2://localhost:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver'
+# alias step-1_start_listener='sh ${DEMODIR}/scripts/start_listener.sh'
+# alias step-2_start_streaming='sh ${DEMODIR}/scripts/run_m7_streaming_import.sh'
+# alias step-3_push_data='sh ${DEMODIR}/scripts/push_data.sh'
+# alias step-4_table_scan='echo "scan '\''/tables/sensortable'\'', {LIMIT => 3}" | hbase shell'
+# alias step-5_shark_beeline='${SHARK_BIN} --service beeline -u jdbc:hive2://localhost:10000 -n mapr -p mapr -d org.apache.hive.jdbc.HiveDriver'
 
-alias step-YY_stop_datastream='sh ${DEMODIR}/scripts/stop_datastream.sh'
+# alias step-YY_stop_datastream='sh ${DEMODIR}/scripts/stop_datastream.sh'
 
-alias step-XX_restart_services='sh ${DEMODIR}/scripts/restart_services.sh'
+# alias step-XX_restart_services='sh ${DEMODIR}/scripts/restart_services.sh'
 
 
 
