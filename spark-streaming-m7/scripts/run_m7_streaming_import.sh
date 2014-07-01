@@ -125,7 +125,7 @@ for jar in `find $SCALA_HOME -name 'scala*.jar'`; do
 done
 
 #grab the json4s jars
-if [ -d ${DEMODIR}/m7_streaming_import/jars/cache/org.json4s ]
+if [ -d ${LABDIR}/m7_streaming_import/jars/cache/org.json4s ]
 	then
 	for jar in `find ${DEMODIR}/m7_streaming_import/jars/cache/org.json4s -name '*.jar'`; do
 	CLASSPATH+=:$jar
