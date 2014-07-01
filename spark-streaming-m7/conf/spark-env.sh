@@ -41,7 +41,7 @@ export SPARK_WORKER_DIR=/mapr/$CLUSTER/var/mapr/local/`hostname -f`/sparktmp
 # MEMORY SETTINGS
 export SPARK_MEM=1g
 export SPARK_DAEMON_MEMORY=1g
-export SPARK_WORKER_MEMORY=16g
+export SPARK_WORKER_MEMORY=6g
 export SPARK_JAVA_OPTS+=" -Dspark.cores.max=4"
 
 export SPARK_MASTER_IP=REPLACEME
