@@ -61,19 +61,19 @@ install mapr-tasktracker and mapr-jobtracker on only 2 nodes (one JT will be sta
 
 	clush -g mr1 'yum install -y mapr-jobtracker mapr-tasktracker'
 
-Build your disks.txt file however you normally do.  In my setup, I ran disksetup.sh first, then ran configure.sh, but you could combine lines if you want per the instructions in the beta docs.  IN any case, once its time to run configure.sh:
+Build your disks.txt file however you normally do.  
 
 
 ##Configure
 
 Run this on YARN nodes:
 
-	clush -g yarn "/opt/mapr/server/configure.sh -C yarn-demo0,yarn-demo2,yarn-demo4 -Z yarn-demo1,yarn-demo2,yarn-demo3 -N yarn-dt -hadoop 2 -RM yarn-demo2 -HS yarn-demo2 -M7"  
+	clush -g yarn "/opt/mapr/server/configure.sh -C yarn-demo0,yarn-demo2,yarn-demo4 -Z yarn-demo1,yarn-demo2,yarn-demo3 -F /tmp/disks.txt -N yarn-dt -hadoop 2 -RM yarn-demo2 -HS yarn-demo2 -M7"  
 >(note the RM flag)
 
 Run this on MR1 nodes:
 
-	clush -g mr1 "/opt/mapr/server/configure.sh -C yarn-demo0,yarn-demo2,yarn-demo4 -Z yarn-demo1,yarn-demo2,yarn-demo3 -N yarn-dt -hadoop 1 -M7"
+	clush -g mr1 "/opt/mapr/server/configure.sh -C yarn-demo0,yarn-demo2,yarn-demo4 -Z yarn-demo1,yarn-demo2,yarn-demo3 -F /tmp/disks.txt -N yarn-dt -hadoop 1 -M7"
 
 
 
@@ -301,6 +301,7 @@ you can then filter for specific phone numbers to watch them move around the map
 
 from the demo page, you can click lick to console and it will jump to the actual app.
 
+In the webex recording @ about 31:00:
 in the pi demo (11):
 
 	begin-logical-plan-change 
@@ -312,7 +313,7 @@ then:
 now connect operator to a stream:
 
 	add-stream-sink rand_console console2 input
-rand_console => stream name
+rand_console => stream name (check UI for running streams)
 
 submit the plan:
 
