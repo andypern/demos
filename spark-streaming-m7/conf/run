@@ -60,9 +60,9 @@ done
 for jar in `find $SHARK_HOME/lib_managed/bundles -name '*jar'`; do
   SPARK_CLASSPATH+=:$jar
 done
-SPARK_CLASSPATH+=:/opt/mapr/hive/hive-0.13/lib/hive-exec-0.13.0-mapr-1405.jar
-SPARK_CLASSPATH+=:/opt/mapr/hive/hive-0.13/lib/elasticsearch-hadoop-2.0.0.jar
-SPARK_CLASSPATH+=:/opt/mapr/hive/hive-0.13/lib/hive-hbase-handler-0.13.0-mapr-1405.jar
+SPARK_CLASSPATH+=:/opt/mapr/hive/hive-0.12/lib/hive-exec-0.12-mapr-1405.jar
+SPARK_CLASSPATH+=:/opt/mapr/hive/hive-0.12/lib/elasticsearch-hadoop-2.0.0.jar
+SPARK_CLASSPATH+=:/opt/mapr/hive/hive-0.12/lib/hive-hbase-handler-0.12-mapr-1405.jar
 
 SPARK_CLASSPATH+=:$HIVE_CONF_DIR
 

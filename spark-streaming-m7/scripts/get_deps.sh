@@ -70,9 +70,9 @@ sed -i 's/REPLACEME/'${MYHOST}'/' ${DEMODIR}/conf/spark-env.sh
 sed -i 's/REPLACEME/'${MYHOST}'/' ${DEMODIR}/conf/shark-env.sh
 
 
-cp /opt/mapr/hive/hive-0.13/conf/hive-site.xml /opt/mapr/hive/hive-0.13/conf/hive-site.xml.bak
+cp /opt/mapr/hive/hive-0.12/conf/hive-site.xml /opt/mapr/hive/hive-0.12/conf/hive-site.xml.bak
 
-cp -f ${DEMODIR}/conf/hive-site.xml /opt/mapr/hive/hive-0.13/conf/hive-site.xml
+cp -f ${DEMODIR}/conf/hive-site.xml /opt/mapr/hive/hive-0.12/conf/hive-site.xml
 cp -f ${DEMODIR}/conf/shark-env.sh /opt/mapr/shark/shark-0.9.0/conf/shark-env.sh
 
 clush -a -c /opt/mapr/shark/shark-0.9.0/conf/shark-env.sh
