@@ -20,7 +20,7 @@
 <configuration>
 <property>
  <name>hive.metastore.uris</name>
- <value>thrift://localhost:9083</value>
+ <value>thrift://REPLACE_META:9083</value>
 </property>
 <property>
  <name>hive.metastore.execute.setugi</name>
@@ -34,6 +34,11 @@
  <name>oozie.service.WorkflowAppService.system.libpath</name>
  <value>/oozie/share/lib</value>
 </property>
+<!--this is to get ingest to elasticsearch to work-->
+<property>
+<name>mapreduce.task.classpath.user.precedence</name>
+<value>true</value>
+</property>
 <!--this is to get shark to work w/ m7-->
 <property>
 <name>hive.aux.jars.path</name>
@@ -43,7 +48,7 @@
 
 <property>
   <name>hbase.zookeeper.quorum</name>
-  <value>maprdemo</value>
+  <value>REPLACE_ZK1,REPLACE_ZK2,REPLACE_ZK3</value>
   <description>A comma separated list (with no spaces) of the IP addresses of all ZooKeeper servers in the cluster.</description>
 </property>
 
@@ -52,4 +57,29 @@
   <value>5181</value>
   <description>The Zookeeper client port. The MapR default clientPort is 5181.</description>
  </property>
+<!--this is for mysql connection stuff to work-->
+<property>
+ <name>javax.jdo.option.ConnectionURL</name>
+ <value>jdbc:mysql://REPLACE_MYSQL:3306/hive?createDatabaseIfNotExist=true</value>
+ <description>JDBC connect string for a JDBC metastore</description>
+</property>
+
+<property>
+ <name>javax.jdo.option.ConnectionDriverName</name>
+ <value>com.mysql.jdbc.Driver</value>
+ <description>Driver class name for a JDBC metastore</description>
+</property>
+
+<property>
+ <name>javax.jdo.option.ConnectionUserName</name>
+ <value>mapr</value>
+ <description>username to use against metastore database</description>
+</property>
+
+<property>
+ <name>javax.jdo.option.ConnectionPassword</name>
+ <value>MapR</value>
+<description>password to use against metastore database</description>
+</property>
+
 </configuration>
