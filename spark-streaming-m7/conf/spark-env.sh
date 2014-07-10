@@ -21,6 +21,8 @@
 # - SPARK_WORKER_DIR, to set the working directory of worker processes
 
 export CLUSTER=`head -n 1 /opt/mapr/conf/mapr-clusters.conf |awk {'print $1'}`
+export SPARK_SCRATCH=/mapr/$CLUSTER/var/mapr/local/`cat /opt/mapr/hostname`/sparktmp
+
 export SPARK_HOME=/opt/mapr/spark/spark-0.9.1
 export HADOOP_HOME=/opt/mapr/hadoop/hadoop-0.20.2
 export SPARK_LIBRARY_PATH=/usr/local/lib:/opt/mapr/lib:/opt/mapr/hadoop/hadoop-0.20.2/lib/native/Linux-amd64-64
@@ -29,7 +31,7 @@ SPARK_CLASSPATH=$SPARK_CLASSPATH:/opt/mapr/lib/json-20080701.jar:/opt/mapr/hadoo
 
 
 export SPARK_CLASSPATH
-export SPARK_WORKER_DIR=/mapr/$CLUSTER/var/mapr/local/`hostname -f`/sparktmp
+export SPARK_WORKER_DIR=${SPARK_SCRATCH}/worker_dir
 
 #export SPARK_JAVA_OPTS+=" -Dspark.local.dir=/mapr/my.cluster.com/var/mapr/local/`hostname -s`/sparktmp"
 
@@ -43,6 +45,8 @@ export SPARK_MEM=1g
 export SPARK_DAEMON_MEMORY=1g
 export SPARK_WORKER_MEMORY=6g
 export SPARK_JAVA_OPTS+=" -Dspark.cores.max=4"
+export SPARK_JAVA_OPTS+=" -Dspark.local.dir=${SPARK_SCRATCH}/localdir"
+export SPARK_JAVA_OPTS+=" -Djava.io.tmpdir=${SPARK_SCRATCH}/javatmp"
 
 export SPARK_MASTER_IP=REPLACEME
 

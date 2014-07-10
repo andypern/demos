@@ -48,7 +48,7 @@
 
 <property>
   <name>hbase.zookeeper.quorum</name>
-  <value>REPLACE_ZK1,REPLACE_ZK2,REPLACE_ZK3</value>
+  <value>REPLACE_ZK</value>
   <description>A comma separated list (with no spaces) of the IP addresses of all ZooKeeper servers in the cluster.</description>
 </property>
 
