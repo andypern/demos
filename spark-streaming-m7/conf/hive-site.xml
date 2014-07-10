@@ -37,7 +37,7 @@
 <!--this is to get shark to work w/ m7-->
 <property>
 <name>hive.aux.jars.path</name>
-   <value>file:///opt/mapr/hive/hive-0.13/lib/hive-hbase-handler-0.13.0-mapr-1405.jar,file:////opt/mapr/hbase/hbase-0.94.17/hbase-0.94.17-mapr-1405.jar,file:///opt/mapr/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.jar</value>
+   <value>file:///opt/mapr/hive/hive-0.12/lib/hive-hbase-handler-0.12-mapr-1405.jar,file:///opt/mapr/hbase/hbase-0.94.17/hbase-0.94.17-mapr-1405.jar,file:///opt/mapr/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.jar</value>
    <description>A comma separated list (with no spaces) of the jar files required for Hive-HBase integration</description>
  </property>
 
