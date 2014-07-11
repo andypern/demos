@@ -211,6 +211,7 @@ rpm -i elasticsearch-1.2.1.noarch.rpm
 
 service elasticsearch start
 
+sleep 10;
 
 CURLSTATUS=` curl 'http://localhost:9200/?pretty' 2>/dev/null|grep status|grep 200|wc -l`
 
@@ -228,6 +229,8 @@ cp -R kibana-3.1.0 /var/www/html/
 sed -i -r "s/\"\+window\.location\.hostname\+\"/`hostname -a|awk {'print $2'}`/" /var/www/html/kibana-3.1.0/config.js 
 
 service httpd start
+
+sleep 10;
 
 DASH_STATUS=curl http://skohearts0/kibana-3.1.0/#/dashboard/file 2>/dev/null|grep Kibana|wc -l
 
