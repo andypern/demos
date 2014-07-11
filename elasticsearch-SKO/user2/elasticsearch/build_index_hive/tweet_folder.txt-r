@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS tweet_folder;
+
+CREATE EXTERNAL TABLE user2_tweet_folder(json string)
+LOCATION '/user/mapr/elasticsearch/data';

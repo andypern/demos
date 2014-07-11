@@ -12,9 +12,31 @@ else
 	exit 1
 fi
 
+clush -a 'yum install -y mapr-hive-0.12.26066-1'
+yum install -y mapr-hivemetastore-0.12.26066-1
+clush -a 'yum install -y mapr-hbase'
+clush -a 'yum install -y mysql'
+clush -a -c /etc/clustershell/groups
+clush -a -c /etc/hosts
+clush -a 'echo "mapr" | passwd --stdin root'
+clush -a 'echo "mapr" | passwd --stdin mapr'
+clush -a 'yum install -y lsof git screen'
+ export MYSQLHOST=`clush -a 'netstat -an|grep 3306|grep LISTEN' 2>/dev/null|awk -F ":" {'print $1'}`
 
+ssh $MYSQLHOST 'mysql -u root -e "drop user 'mapr'@'localhost';"'
+ssh $MYSQLHOST 'mysql -u root -e "drop user 'mapr'@'%';"'
+ssh $MYSQLHOST 'mysql -u root -e "drop user 'mapr'@'localhost';"'
+ssh $MYSQLHOST 'mysql -u root -e "drop user 'mapr'@'%';"'
+ssh $MYSQLHOST 'mysql -u root -e "create user 'mapr'@'%' identified by 'MapR';"'
+ssh $MYSQLHOST 'mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'mapr'@'%' WITH GRANT OPTION;"'
+
+cd /tmp
+curl -L 'http://www.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.18.tar.gz/from/http://mysql.he.net/|http://mysql.he.net/' | tar xz
+cp mysql-connector-java-5.1.18/mysql-connector-java-5.1.18-bin.jar /opt/mapr/hive/hive-0.12/lib
+clush -a -c /opt/mapr/hive/hive-0.12/lib/mysql-connector-java-5.1.18-bin.jar 
 
 ln -s /usr/bin/java /bin/java
+
 
 # echo 0 > /selinux/enforce
 # sed -i 's/=enforcing/=disabled/' /etc/selinux/config 
@@ -132,6 +154,114 @@ for USER in `seq 9`
 
 done
 
+
+#time to fix up the hive-site.xml
+
+export HIVEMETA=`maprcli node list -columns hostname,csvc -filter csvc=="hivemeta"|tail -n 1 | awk {'print $1'}`
+export ZK_QUORUM=`grep zk /etc/clustershell/groups|awk {'print $2'}`
+export MYSQLHOST=`clush -a 'netstat -an|grep 3306|grep LISTEN' 2>/dev/null|awk -F ":" {'print $1'}`
+
+sed -i 's/REPLACE_META/'${HIVEMETA}'/' /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+sed -i 's/REPLACE_ZK/'${ZK_QUORUM}'/' /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+sed -i 's/REPLACE_MYSQL/'${MYSQLHOST}'/' /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+
+clush -a -c /opt/mapr/hive/hive-0.12/conf/hive-site.xml
+
+
+
+echo "time for drill"
+
+cd /mapr/$CLUSTER
+wget http://54.184.26.48/mapr-drill-1.0.0.BETA1.26376-1.noarch.rpm
+clush -a "rpm -ivh /mapr/$CLUSTER/mapr-drill-1.0.0.BETA1.26376-1.noarch.rpm"
+
+echo -e "\nexport HADOOP_HOME=/opt/mapr/hadoop/hadoop-0.20.2" >> /opt/mapr/drill/drill-1.0.0.BETA1/conf/drill-env.sh
+
+clush -a -c /opt/mapr/drill/drill-1.0.0.BETA1/conf/drill-env.sh
+
+export ZK_QUORUM=`grep zk /etc/clustershell/groups|awk {'print $2'}`
+export ZK_PORTS=`echo $ZK_QUORUM|sed 's/,/:5181,/g'|sed 's/$/:5181/'|sed 's/$/:5181/'`
+sed -i 's/localhost:2181/'$ZK_PORTS'/' /opt/mapr/drill/drill-1.0.0.BETA1/conf/drill-override.conf 
+clush -a -c /opt/mapr/drill/drill-1.0.0.BETA1/conf/drill-override.conf
+clush -a 'mkdir -p /opt/mapr/zookeeper/zookeeper-3.3.6/'
+
+clush -a -c /opt/mapr/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.jar
+
+
+maprcli node services -name drill-bits -action restart -nodes $(maprcli node list -columns hn -filter csvc=="drill-bits" | tail -n +2 | cut -d' ' -f1)
+
+sleep 30;
+
+clush -a 'jps|grep -i drill'
+
+
+#elasticsearch
+yum install -y httpd
+
+cd /tmp
+wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.noarch.rpm
+
+rpm -i elasticsearch-1.2.1.noarch.rpm
+
+service elasticsearch start
+
+
+CURLSTATUS=` curl 'http://localhost:9200/?pretty' 2>/dev/null|grep status|grep 200|wc -l`
+
+if [ $CURLSTATUS = 0 ] 
+then
+	echo “exiting, curlstatus not OK, check elasticsearch service”
+	exit 1
+fi
+
+wget https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.zip
+
+unzip kibana-3.1.0.zip 
+cp -R kibana-3.1.0 /var/www/html/ 
+
+sed -i -r "s/\"\+window\.location\.hostname\+\"/`hostname -f`/" /var/www/html/kibana-3.1.0/config.js 
+
+service httpd start
+
+DASH_STATUS=curl http://skohearts0/kibana-3.1.0/#/dashboard/file 2>/dev/null|grep Kibana|wc -l
+
+if [ $DASH_STATUS = 0 ] 
+then
+	echo “exiting, DASH_STATUS not OK, check httpd service”
+	exit 1
+fi
+
+wget http://download.elasticsearch.org/hadoop/elasticsearch-hadoop-2.0.0.zip
+
+unzip elasticsearch-hadoop-2.0.0.zip 
+
+cp /tmp/elasticsearch-hadoop-2.0.0/dist/elasticsearch-hadoop-hive-2.0.0.jar /opt/mapr/hive/hive-0.12/lib/
+
+
+cp /tmp/elasticsearch-hadoop-2.0.0/dist/elasticsearch-hadoop-2.0.0.jar /opt/mapr/hive/hive-0.12/lib/
+
+clush -a -c /opt/mapr/hive/hive-0.12/lib/elasticsearch*.jar
+
+yum install -y python tools
+easy_install pip
+easy_install tweepy
+pip install elasticsearch
+
+mkdir -p /mapr/$CLUSTER/user/*/elasticsearch/data
+
+
+
+# fix cluster name in braden's py scripts.
+find /mapr/$CLUSTER/demos/elasticsearch-SKO -name "*.py" -exec sed -i -r 's/REPLACE_CLUSTER/'$CLUSTER'/' {} \;
+
+cp -R /mapr/$CLUSTER/demos/elasticsearch-SKO/* /mapr/$CLUSTER/user/
+
+
+
+
+/usr/share/elasticsearch/bin/plugin --install mobz/elasticsearch-head
+
+#
 
 # mkdir -p ${BASEDIR}
 

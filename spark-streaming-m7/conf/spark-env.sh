@@ -46,7 +46,7 @@ export SPARK_DAEMON_MEMORY=1g
 export SPARK_WORKER_MEMORY=6g
 export SPARK_JAVA_OPTS+=" -Dspark.cores.max=4"
 export SPARK_JAVA_OPTS+=" -Dspark.local.dir=${SPARK_SCRATCH}/localdir"
-export SPARK_JAVA_OPTS+=" -Djava.io.tmpdir=${SPARK_SCRATCH}/javatmp"
+
 
 export SPARK_MASTER_IP=REPLACEME
 
