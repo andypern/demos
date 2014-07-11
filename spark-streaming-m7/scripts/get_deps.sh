@@ -262,9 +262,11 @@ mkdir -p /mapr/$CLUSTER/user/*/elasticsearch/data
 # hive -f /mapr/skohearts/user/user1/elasticsearch/meta/teams_hive.txt
 # on each elasticsearch node
 
+export HOSTNAME=`hostname -f`
+
 find /mapr/$CLUSTER/demos/elasticsearch-SKO -name "*.py" -exec sed -r -i 's/REPLACE_CLUSTER/'$CLUSTER'/' {} \;
 
-
+find /mapr/$CLUSTER/demos/elasticsearch-SKO -type f -exec sed -r -i 's/REPLACE_HOST/'$HOSTNAME'/' {} \; 
 
 cp -R /mapr/$CLUSTER/demos/elasticsearch-SKO/* /mapr/$CLUSTER/user/
 
