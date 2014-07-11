@@ -276,6 +276,8 @@ find /mapr/$CLUSTER/demos/elasticsearch-SKO -type f -exec sed -r -i 's/REPLACE_H
 
 cp -R /mapr/$CLUSTER/demos/elasticsearch-SKO/* /mapr/$CLUSTER/user/
 
+hive -f /mapr/$CLUSTER/user/user1/elasticsearch/meta/teams_hive.txt
+
 
 
 
