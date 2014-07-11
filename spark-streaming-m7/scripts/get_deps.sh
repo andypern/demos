@@ -225,7 +225,7 @@ wget https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.zip
 unzip kibana-3.1.0.zip 
 cp -R kibana-3.1.0 /var/www/html/ 
 
-sed -i -r "s/\"\+window\.location\.hostname\+\"/`hostname -f`/" /var/www/html/kibana-3.1.0/config.js 
+sed -i -r "s/\"\+window\.location\.hostname\+\"/`hostname -a|awk {'print $2'}`/" /var/www/html/kibana-3.1.0/config.js 
 
 service httpd start
 
@@ -268,7 +268,7 @@ mkdir -p /mapr/$CLUSTER/user/*/elasticsearch/data
 # hive -f /mapr/skohearts/user/user1/elasticsearch/meta/teams_hive.txt
 # on each elasticsearch node
 
-export HOSTNAME=`hostname -f`
+export HOSTNAME=`hostname -a|awk {'print $2'}`
 
 find /mapr/$CLUSTER/demos/elasticsearch-SKO -name "*.py" -exec sed -r -i 's/REPLACE_CLUSTER/'$CLUSTER'/' {} \;
 
