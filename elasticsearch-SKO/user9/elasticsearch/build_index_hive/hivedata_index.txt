@@ -1,0 +1,13 @@
+add jar /opt/mapr/hive/hive-0.12/lib/elasticsearch-hadoop-hive-2.0.0.jar;
+add jar /opt/mapr/hive/hive-0.12/lib/elasticsearch-hadoop-2.0.0.jar;
+
+DROP TABLE IF EXISTS user9_hivedata_index;
+
+CREATE EXTERNAL TABLE user9_hivedata_index(
+id bigint, 
+name string, 
+friendscount int, 
+source string, 
+tweet string)
+STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+TBLPROPERTIES('es.resource' = 'user9_hivedata/extnd','es.nodes' = 'REPLACE_HOST', 'es.index.auto.create' = 'true');

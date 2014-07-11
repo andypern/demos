@@ -180,7 +180,7 @@ echo -e "\nexport HADOOP_HOME=/opt/mapr/hadoop/hadoop-0.20.2" >> /opt/mapr/drill
 clush -a -c /opt/mapr/drill/drill-1.0.0.BETA1/conf/drill-env.sh
 
 export ZK_QUORUM=`grep zk /etc/clustershell/groups|awk {'print $2'}`
-export ZK_PORTS=`echo $ZK_QUORUM|sed 's/,/:5181,/g'|sed 's/$/:5181/'|sed 's/$/:5181/'`
+export ZK_PORTS=`echo $ZK_QUORUM|sed 's/,/:5181,/g'|sed 's/$/:5181/'`
 sed -i 's/localhost:2181/'$ZK_PORTS'/' /opt/mapr/drill/drill-1.0.0.BETA1/conf/drill-override.conf 
 clush -a -c /opt/mapr/drill/drill-1.0.0.BETA1/conf/drill-override.conf
 clush -a 'mkdir -p /opt/mapr/zookeeper/zookeeper-3.3.6/'
@@ -252,7 +252,19 @@ mkdir -p /mapr/$CLUSTER/user/*/elasticsearch/data
 
 
 # fix cluster name in braden's py scripts.
-find /mapr/$CLUSTER/demos/elasticsearch-SKO -name "*.py" -exec sed -i -r 's/REPLACE_CLUSTER/'$CLUSTER'/' {} \;
+
+
+# fix usernames for each folder
+# fix sko1/cluster name for each folder
+# fix es.resource to not be ip-* (needs to be host that is running elasticsearch)
+
+# need to run:
+# hive -f /mapr/skohearts/user/user1/elasticsearch/meta/teams_hive.txt
+# on each elasticsearch node
+
+find /mapr/$CLUSTER/demos/elasticsearch-SKO -name "*.py" -exec sed -r -i 's/REPLACE_CLUSTER/'$CLUSTER'/' {} \;
+
+
 
 cp -R /mapr/$CLUSTER/demos/elasticsearch-SKO/* /mapr/$CLUSTER/user/
 

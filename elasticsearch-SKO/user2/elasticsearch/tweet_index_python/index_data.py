@@ -6,7 +6,7 @@ import os
 import time
 from datetime import datetime, timedelta
 
-path = "/mapr/REPLACE_CLUSTER/user/mapr/elasticsearch/data/"
+path = "/mapr/REPLACE_HOST/user/mapr/elasticsearch/data/"
 
 def submit_data(data, timestamp):
         #create json object based on string passed
@@ -17,7 +17,7 @@ def submit_data(data, timestamp):
         es["id"] = str(j["id"]).replace("'","").replace("\"", "")
         es["username"] = j["user"]["screen_name"]
         es["tweet"] = j["text"]
-		es["timestamp"] = str(timestamp)
+        es["timestamp"] = timestamp
         es_j = json.dumps(es)
 
         #submit to elasticsearch
@@ -40,5 +40,5 @@ ofolder = os.listdir(path)
 
 for filename in ofolder:
     contents = open(path + filename, "r").read()
-    timestamp = datetime.fromtimestamp(os.path.getmtime(path + filename))
+    timestamp = datetime.fromtimestamp(os.path.getmtime(path + filename)).isoformat()	
     submit_data(contents, timestamp)

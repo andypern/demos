@@ -1,2 +1,0 @@
-CREATE EXTERNAL TABLE ext_nflteams(team string)
-LOCATION '/user/mapr/nfl/meta/teams';

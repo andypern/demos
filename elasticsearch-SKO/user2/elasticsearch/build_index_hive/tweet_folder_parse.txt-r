@@ -1,7 +1,0 @@
-select
-get_json_object(tweet_folder.json, '$.id') as id,
-get_json_object(tweet_folder.json, '$.user.screen_name') as name,
-get_json_object(tweet_folder.json, '$.user.friends_count') as friendscount,
-get_json_object(tweet_folder.json, '$.source') as source,
-get_json_object(tweet_folder.json, '$.text') as tweet
-from user2_tweet_folder;

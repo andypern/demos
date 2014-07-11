@@ -32,7 +32,7 @@ class StdOutListener(StreamListener):
         timestamp = datetime.fromtimestamp(time.time())
         str_timestamp = str(timestamp.strftime("%m_%d_%Y-%H_%M_%S"))
         user_name = j["user"]["screen_name"]
-        of = open("../data/" + user_name + str_timestamp + ".txt", "w")
+        of = open("/mapr/REPLACE_HOST/user/mapr/elasticsearch/data/" + user_name + str_timestamp + ".txt", "w")
         es = {}
         es["id"] = str(j["id"]).replace("'","").replace("\"", "")
         es["username"] = user_name

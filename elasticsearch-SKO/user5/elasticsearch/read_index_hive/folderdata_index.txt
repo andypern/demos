@@ -15,4 +15,4 @@ WITH SERDEPROPERTIES (
   'serialization.format'='1')
 TBLPROPERTIES (
   'es.query'='?q=*',
-  'es.index.auto.create'='false', 'es.resource'='folderdata/tweets');
+  'es.index.auto.create'='false', 'es.resource'='user5_nfl/tweets');

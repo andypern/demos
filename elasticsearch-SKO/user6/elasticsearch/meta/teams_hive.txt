@@ -1,2 +1,3 @@
+DROP TABLE IF EXISTS ext_nflteams;
 CREATE EXTERNAL TABLE ext_nflteams(team string)
-LOCATION '/user/mapr/nfl/meta/teams';
+LOCATION '/user/mapr/elasticsearch/teams.txt';
