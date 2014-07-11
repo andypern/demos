@@ -12,6 +12,11 @@ else
 	exit 1
 fi
 
+#fix sysconfig/network
+
+clush -a 'sed -r -i "s/HOSTNAME\=.+/HOSTNAME\='\`cat /opt/mapr/hostname\`'/" /etc/sysconfig/network'
+
+
 clush -a 'yum install -y mapr-hive-0.12.26066-1'
 yum install -y mapr-hivemetastore-0.12.26066-1
 clush -a 'yum install -y mapr-hbase'
@@ -21,7 +26,8 @@ clush -a -c /etc/hosts
 clush -a 'echo "mapr" | passwd --stdin root'
 clush -a 'echo "mapr" | passwd --stdin mapr'
 clush -a 'yum install -y lsof git screen'
- export MYSQLHOST=`clush -a 'netstat -an|grep 3306|grep LISTEN' 2>/dev/null|awk -F ":" {'print $1'}`
+
+export MYSQLHOST=`clush -a 'netstat -an|grep 3306|grep LISTEN' 2>/dev/null|awk -F ":" {'print $1'}`
 
 ssh $MYSQLHOST 'mysql -u root -e "drop user 'mapr'@'localhost';"'
 ssh $MYSQLHOST 'mysql -u root -e "drop user 'mapr'@'%';"'
