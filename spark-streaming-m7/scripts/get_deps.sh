@@ -111,6 +111,7 @@ cp -f ${DEMODIR}/conf/spark-env.sh /opt/mapr/spark/spark-0.9.1/conf/spark-env.sh
 clush -a -c /opt/mapr/spark/spark-0.9.1/conf/spark-env.sh
 
 cp -f ${DEMODIR}/conf/run /opt/mapr/shark/shark-0.9.0/run
+clush -a -c /opt/mapr/shark/shark-0.9.0/run
 
 #clean up old cruft
 
@@ -174,6 +175,20 @@ sed -i 's/REPLACE_MYSQL/'${MYSQLHOST}'/' /opt/mapr/hive/hive-0.12/conf/hive-site
 clush -a -c /opt/mapr/hive/hive-0.12/conf/hive-site.xml
 
 
+#hack to fix up the hadoop classpath for MR jobs
+echo -e '\nexport HADOOP_CLASSPATH="/opt/mapr/hbase/hbase-0.94.17/hbase-0.94.17-mapr-1405.jar:$HADOOP_CLASSPATH"' >> /opt/mapr/hadoop/hadoop-0.20.2/conf/hadoop-env.sh
+clush -a -c /opt/mapr/hadoop/hadoop-0.20.2/conf/hadoop-env.sh
+
+#need to restart JT+TT's to take this change
+maprcli node services -name jobtrackter -action restart -nodes $(maprcli node list -columns hn -filter csvc=="jobtracker" | tail -n +2 | cut -d' ' -f1)
+
+echo 'sleeping 60 seconds so JT can restart'
+sleep 60;
+
+#now for TTs
+maprcli node services -name tasktracker -action restart -nodes $(maprcli node list -columns hn -filter csvc=="tasktracker" | tail -n +2 | cut -d' ' -f1)
+
+##Drill
 
 echo "time for drill"
 
