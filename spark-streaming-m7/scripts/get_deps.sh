@@ -180,7 +180,7 @@ echo -e '\nexport HADOOP_CLASSPATH="/opt/mapr/hbase/hbase-0.94.17/hbase-0.94.17-
 clush -a -c /opt/mapr/hadoop/hadoop-0.20.2/conf/hadoop-env.sh
 
 #need to restart JT+TT's to take this change
-maprcli node services -name jobtrackter -action restart -nodes $(maprcli node list -columns hn -filter csvc=="jobtracker" | tail -n +2 | cut -d' ' -f1)
+maprcli node services -name jobtracker -action restart -nodes $(maprcli node list -columns hn -filter csvc=="jobtracker" | tail -n +2 | cut -d' ' -f1)
 
 echo 'sleeping 60 seconds so JT can restart'
 sleep 60;
