@@ -55,7 +55,11 @@ All instructions assume that you login as root (password=mapr on the sandbox)
 
 		cd demos/spark-streaming-m7/scripts
 
-6. ***only works on 3.0.3 sandbox***: run dependency installer:
+6.  source env.sh:
+	
+		source env.sh
+
+7. ***only works on 3.0.3 sandbox***: run dependency installer:
 
 		sh ./get_deps.sh
 >this will take several minutes or more.  It has to download > 600MB worth of dependancies, start/stop some services, and compile some Scala code into a jar file.
