@@ -91,7 +91,7 @@ mkdir -p /mapr/${CLUSTER}/CSV
 
 
 export SHARK_HOME=/opt/mapr/shark/shark-0.9.0
-export SPARK_HOME=/opt/mapr/spark/spark-0.9.1
+export SPARK_HOME=/opt/mapr/spark/${SPARK_REV}
 export SCALA_HOME=/usr/share/java
 export CLASSPATH
 

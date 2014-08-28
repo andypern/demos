@@ -21,6 +21,8 @@ export SOURCE_FILE=${BASEDIR}/SensorDataV5.csv
 export JAVA_BIN=`which java`
 export SLEEPSECS=.25 #sleep secs for data generator to pause between sending
 
+#determine spark version
+export SPARK_REV=`ls /opt/mapr/spark`
 
 #update path
 export SHARK_BIN=/opt/mapr/shark/shark-0.9.0/bin/shark
