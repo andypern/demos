@@ -158,12 +158,12 @@ object m7import {
             //build our tblPut object with multiple columns.
             // TODO: probably better done w/ a loop, but that's for another day.
 
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("custID"),Bytes.toBytes(resID))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("actualDate"),Bytes.toBytes(dateTime))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("daily_usage"),Bytes.toBytes(hz))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("temp_avg"),Bytes.toBytes(disp))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("temp_max"),Bytes.toBytes(flo))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("temp_min"),Bytes.toBytes(sedPPM))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("custID"),Bytes.toBytes(custID))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("actualDate"),Bytes.toBytes(actualDate))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("daily_usage"),Bytes.toBytes(daily_usage))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("temp_avg"),Bytes.toBytes(temp_avg))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("temp_max"),Bytes.toBytes(temp_max))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("temp_min"),Bytes.toBytes(temp_min))
    
 
     
