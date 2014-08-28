@@ -80,7 +80,7 @@ object m7import {
   
     StreamingExamples.setStreamingLogLevels()
 
-     val Array(master, host, IntParam(port), IntParam(batchsecs), tablename, outputPath) = args
+     val Array(masterURL, host, IntParam(port), IntParam(batchsecs), tablename, outputPath) = args
 
      //time to write an output file..we should probably split it into multiples but for now we'll just stream to a single file.
 
@@ -100,8 +100,8 @@ object m7import {
     //this is the 1.0 way
 
     //val sparkConf = new SparkConf().setAppName("M7import")
-    val myAppName="M7import"
-    val ssc = new StreamingContext(master: master, appName: myAppName, Seconds(batchsecs))
+    val myAppName = "M7import"
+    val ssc = new StreamingContext(master: masterURL, appName: myAppName, Seconds(batchsecs))
 
     //instantiate m7/hbase connection ahead of time.
 
