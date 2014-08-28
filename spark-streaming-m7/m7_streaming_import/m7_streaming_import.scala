@@ -140,12 +140,12 @@ object m7import {
             linecount += 1
              //time to split this row into words, from scala-cookbook, the .trim removes leading/trailing
              //spaces from the values.
-            val Array(resID, date, time, hz, disp, flo, sedPPM, psi, chlPPM) = line.split(",").map(_.trim)
+            val Array(custID, actualDate, daily_usage, temp_avg, temp_max, temp_min) = line.split(",").map(_.trim)
             
             //since tableau is lame about datefields, need to combine date+time
-            val dateTime = date + " " + time
+           
             // Time to create a compositekey
-            val compositeKey = resID + "_" + dateTime
+            val compositeKey = custID + "_" + actualDate
 
             //now we need some code to shove into m7..
 
@@ -158,18 +158,17 @@ object m7import {
             //build our tblPut object with multiple columns.
             // TODO: probably better done w/ a loop, but that's for another day.
 
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("resID"),Bytes.toBytes(resID))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("date"),Bytes.toBytes(dateTime))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("hz"),Bytes.toBytes(hz))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("disp"),Bytes.toBytes(disp))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("flo"),Bytes.toBytes(flo))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("sedPPM"),Bytes.toBytes(sedPPM))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("psi"),Bytes.toBytes(psi))
-            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("chlPPM"),Bytes.toBytes(chlPPM))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("custID"),Bytes.toBytes(resID))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("actualDate"),Bytes.toBytes(dateTime))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("daily_usage"),Bytes.toBytes(hz))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("temp_avg"),Bytes.toBytes(disp))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("temp_max"),Bytes.toBytes(flo))
+            tblPut.add(Bytes.toBytes("cf1"),Bytes.toBytes("temp_min"),Bytes.toBytes(sedPPM))
+   
 
     
             table.put(tblPut)
-            Files.append(resID + "," + dateTime + "," + hz + "," + disp + "," + flo + "," + sedPPM + "," + psi + "," + chlPPM + "\n", outputFile, Charset.defaultCharset())
+            Files.append(custID + "," + actualDate + "," + daily_usage + "," + temp_avg + "," + temp_max + "," + temp_min + "\n", outputFile, Charset.defaultCharset())
           
           }
           /*now that each of the rows are in m7 , lets dump the entire RDD to disk.

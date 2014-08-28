@@ -1,5 +1,7 @@
 #Shark, Spark, M7
-This is a work in progress...
+Beware: this now has been made to work on spark 1.0.2.  It probably won't work at all for 0.9* anymore.  sorry.
+
+
 
 ##TODO
 

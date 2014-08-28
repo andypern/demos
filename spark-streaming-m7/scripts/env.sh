@@ -17,7 +17,7 @@ export BASEDIR=/mapr/${CLUSTER}/ingest
 export DEMODIR=/mapr/${CLUSTER}/demos/spark-streaming-m7
 export JARFILE=${DEMODIR}/m7_streaming_import/target/scala-2.10/m7import_2.10-0.1-SNAPSHOT.jar
 
-export SOURCE_FILE=${BASEDIR}/SensorDataV5.csv
+export SOURCE_FILE=${BASEDIR}/5PInput.csv
 export JAVA_BIN=`which java`
 export SLEEPSECS=.25 #sleep secs for data generator to pause between sending
 
