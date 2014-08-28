@@ -100,7 +100,8 @@ object m7import {
     //this is the 1.0 way
 
     //val sparkConf = new SparkConf().setAppName("M7import")
-    val ssc = new StreamingContext(master: master, appName: "M7import", Seconds(batchsecs))
+    val myAppName="M7import"
+    val ssc = new StreamingContext(master: master, appName: myAppName, Seconds(batchsecs))
 
     //instantiate m7/hbase connection ahead of time.
 
