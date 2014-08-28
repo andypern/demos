@@ -92,9 +92,16 @@ object m7import {
     System.setProperty("spark.cores.max", "2")
     // Create the context with a X second batch size, where X is the arg you supplied as 'batchsecs'.
 
+    /*this is the 0.9 way, commenting for now
     val ssc = new StreamingContext(master, "M7import", Seconds(batchsecs),
       System.getenv("SPARK_HOME"), StreamingContext.jarOfClass(this.getClass))
+    */
 
+    //this is the 1.0 way
+
+    val sparkConf = new SparkConf().setAppName("M7import")
+    val ssc = new StreamingContext(sparkConf, Seconds(batchsecs))
+    
     //instantiate m7/hbase connection ahead of time.
 
     val conf = HBaseConfiguration.create()
