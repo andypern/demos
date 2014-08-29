@@ -28,7 +28,7 @@ sh ${DEMODIR}/scripts/drop_tables.sh
 # fi
 
 mkdir -p /mapr/${CLUSTER}/tables
-maprcli table create -path ${TABLENAME}
+maprcli table create -path ${TABLENAME} -defaultreadperm 'g:mapr | g:root' -defaultwriteperm 'g:mapr | g:root' -defaultappendperm 'g:mapr | g:root' 
 maprcli table cf create -path ${TABLENAME} -cfname cf1
 
 /usr/bin/hive -f ${DEMODIR}/scripts/create_ext_table.hql
