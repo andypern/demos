@@ -13,3 +13,12 @@ CREATE EXTERNAL TABLE sensor
         )
 
 TBLPROPERTIES("hbase.table.name" = "/tables/sensortable");
+
+
+CREATE EXTERNAL TABLE customers(cust_id BIGINT, name STRING,
+state STRING, gender STRING,  age STRING, agg_rev INT,
+membership STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ","
+
+STORED AS TEXTFILE LOCATION "/data/customers/";
+
