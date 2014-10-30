@@ -1,1 +1,0 @@
-select * from dfs.`/drill/JSON/` limit 10;

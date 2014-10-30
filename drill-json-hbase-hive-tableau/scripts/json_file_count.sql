@@ -1,1 +1,0 @@
-select count(*) from dfs.`/drill/JSON/user1.json`;

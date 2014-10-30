@@ -1,1 +1,0 @@
-select * from `hive`.`default`.`clicks` limit 10;
